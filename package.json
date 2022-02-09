@@ -1,11 +1,11 @@
 {
-  "name": "web-lab1",
+  "name": "georgii-weblab1",
   "version": "0.0.1",
   "description": "",
   "author": {
-	  "name" : "Georgii Semenov",
-	  "email" : "themrgeorgeous@gmail.com",
-	  "url" : "https://github.com/MrGeorgeous"
+    "name": "Georgii Semenov",
+    "email": "themrgeorgeous@gmail.com",
+    "url": "https://github.com/MrGeorgeous"
   },
   "private": true,
   "license": "UNLICENSED",
@@ -28,6 +28,7 @@
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "hbs": "^4.2.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
