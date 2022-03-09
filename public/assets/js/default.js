@@ -3,7 +3,7 @@ document.querySelector(".app-load-time").innerText = window.performance.timing.d
 
 document.addEventListener('DOMContentLoaded', function(){
     //console.log("Time until DOMready: ", Date.now()-timerStart);
-    document.querySelector(".app-load-time").innerText = (Date.now()-timerStart) / 1000;
+    document.querySelector(".app-load-time").innerText = (Date.now()-timerStart);
 });
 
 // $(document).ready(function() {

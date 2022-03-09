@@ -1,0 +1,78 @@
+<!-- Navigation -->
+<header>
+    <nav class="header" id="menu">
+        <h1 class="logo">Georgii Semenov</h1>
+        <ul>
+
+            {{#each navigation.menu as |element|}}
+            {{#> childEntry}}
+                <li {{#if element.active}}
+                class="active"
+                {{/if}}>
+                    <a {{#if element.href}}
+                            href="{{element.href}}"
+                        {{/if}}>
+                        {{element.title}}
+                    </a>
+                </li>
+            {{/childEntry}}
+        {{/each}}
+
+        {{#each navigation.buttons as |element|}}
+            {{#> childEntry}}
+                <ul>
+                    <li class="button b{{element.color}}" >
+                        <a href="{{element.href}}">{{element.title}}</a>
+                    </li>
+                </ul>
+            {{/childEntry}}
+        {{/each}}
+
+            {{#if session.authorized }}
+                <ul>
+                    <li class="button bBlue" >
+                        <a>Welcome, {{session.user.login}}!</a>
+                    </li>
+                </ul>
+            {{else}}
+                <ul>
+                    <li class="button bBlue" >
+                        <a href="/logged">Sign Up</a>
+                    </li>
+                </ul>
+            {{/if}}
+
+        </ul>
+    </nav>
+
+    <!-- с тегом header-floating становится летучей карточкой -->
+    <div class="page-header header-floating" id="page-header">
+        <div class="container">
+            <!--            <ul class="breadcrumb">-->
+            <!--                <li><a href="">Главная</a></li>-->
+            <!--                <li><a href="">Учеба</a></li>-->
+            <!--            </ul>-->
+
+            <ul class="breadcrumb">
+
+                <!--<li><a data-intro='Заблудшей душе всегда можно вернуться на Главную.'
+                        href="/">Главная</a></li> -->
+
+                {{#each page.breadcrumbs as |element|}}
+                    {{#> childEntry}}
+                        {{#if element.href}}
+                            <li><a href="{{ element.href }}">{{element.title}}</a></li>
+                        {{else}}
+                            <li>{{element.title}}</li>
+                        {{/if}}
+                    {{/childEntry}}
+                {{/each}}
+
+            </ul>
+
+
+            <h1 data-intro='Это заголовочек у страницы! Он поможет разобраться, что на ней находится.'>{{ page.header }}</h1>
+            <p>{{page.description}}</p>
+        </div>
+    </div>
+</header>
