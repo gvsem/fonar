@@ -14,7 +14,7 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  hbs.registerPartials(join(__dirname, '..', 'views/partials'), function (err) {});
+  hbs.registerPartials(join(__dirname, '..', 'views/partials'));
 
   let port = 3000;
   if (process.env?.PORT) {
