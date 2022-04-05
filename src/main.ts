@@ -6,8 +6,6 @@ import * as hbs from 'hbs';
 
 async function bootstrap() {
 
-  var parse = require('pg-connection-string').parse;
-
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
   );

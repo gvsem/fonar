@@ -20,11 +20,7 @@ export class Replique extends Publication {
 
   @ManyToMany(() => Replique)
   @JoinTable()
-  origins: Replique[];
-
-  @ManyToMany(() => Replique)
-  @JoinTable()
-  responses: Replique[];
+  discours: Replique[];
 
   @OneToMany(() => Reponse, (reponse) => reponse.replique)
   reponses: Reponse[];

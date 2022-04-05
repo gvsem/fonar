@@ -5,16 +5,11 @@ import { PageService } from './page.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
-var parse = require('pg-connection-string').parse;
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      host: parse(process.env.DATABASE_URL).host,
-      port: parse(process.env.DATABASE_URL).port,
-      username: parse(process.env.DATABASE_URL).user,
-      password: parse(process.env.DATABASE_URL).password,
-      database: parse(process.env.DATABASE_URL).database,
+      url: process.env?.DATABASE_URL,
       type: 'postgres',
       ssl: {
         rejectUnauthorized: false,

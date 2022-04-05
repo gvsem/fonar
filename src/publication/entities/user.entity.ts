@@ -34,4 +34,7 @@ export class User {
   @OneToMany(() => Reponse, (publication) => publication.creator)
   reponses: Reponse[];
 
+  @Column({select: false})
+  password: string;
+
 }

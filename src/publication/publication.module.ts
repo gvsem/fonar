@@ -6,14 +6,9 @@ import { Replique } from './entities/replique.entity';
 import { Reponse } from './entities/reponse.entity';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),
-            TypeOrmModule.forFeature([Publication]),
-            TypeOrmModule.forFeature([Replique]),
-            TypeOrmModule.forFeature([Reponse])
-  ],
+  imports: [TypeOrmModule.forFeature([PublicationModule])],
   controllers: [],
   providers: [], // services
   exports: [Publication, Replique, Reponse, User]
