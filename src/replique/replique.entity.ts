@@ -1,18 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Publication } from './publication.entity';
-import { User } from './user.entity';
-import { Reponse } from './reponse.entity';
+import { User } from '../user/user.entity';
+import { Reponse } from '../reponse/reponse.entity';
 
 @Entity()
 export class Replique extends Publication {
-
-  @Column()
+  @Column({ nullable: false })
   title: string;
 
-  @Column({ type: "text" })
+  @Column({ type: 'text' })
   abstractText: string;
 
-  @Column({ type: "text" })
+  @Column({ type: 'text' })
   content: string;
 
   @ManyToOne(() => User, (user) => user.repliques)
@@ -24,6 +30,4 @@ export class Replique extends Publication {
 
   @OneToMany(() => Reponse, (reponse) => reponse.replique)
   reponses: Reponse[];
-
-
 }

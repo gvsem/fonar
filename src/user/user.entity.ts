@@ -1,19 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
-import { Replique } from './replique.entity';
-import { Reponse } from './reponse.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Replique } from '../replique/replique.entity';
+import { Reponse } from '../reponse/reponse.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   login: string;
 
-  @Column()
+  @Column({ nullable: false })
   authorAlias: string;
 
-  @Column()
+  @Column({ nullable: false })
   pageURL: string;
 
   @Column()
@@ -34,7 +34,6 @@ export class User {
   @OneToMany(() => Reponse, (publication) => publication.creator)
   reponses: Reponse[];
 
-  @Column({select: false})
+  @Column({ select: false })
   password: string;
-
 }
