@@ -1,15 +1,15 @@
+import { join } from 'path';
+
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PageService } from './page/page.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
-//import { RepliqueController } from "./replique/replique.controller";
-import { RepliqueModule } from "./replique/replique.module";
-import { UserModule } from "./user/user.module";
 
-//import { RepliqueController } from "./replique/replique.module";
-
+import { UserModule } from './user/user.module';
+import { PageModule } from './page/page.module';
+import { RepliqueModule } from './replique/replique.module';
+import { ReponseModule } from './reponse/reponse.module';
 
 @Module({
   imports: [
@@ -23,10 +23,12 @@ import { UserModule } from "./user/user.module";
       synchronize: true, // This for development
       autoLoadEntities: true,
     }),
-    RepliqueModule,
+    PageModule,
     UserModule,
+    RepliqueModule,
+    ReponseModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PageService],
+  providers: [AppService],
 })
 export class AppModule {}

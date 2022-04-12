@@ -2,49 +2,79 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PageService {
-
-  getMeta() : any {
+  getMeta(): any {
     return {
-      'description': 'Lol',
-      'keywords': 'Ah',
-      'author': 'Oh'
+      description: 'Lol',
+      keywords: 'Ah',
+      author: 'Oh',
     };
-  };
+  }
 
   getPage(id: string): any {
     if (id == '/logged') {
       return {
-        'meta': this.getMeta(),
-        'title': 'Logged in state',
-        'header': 'Wow! You are logged in!',
-        'description': 'Great, so glad you\'re in.',
-        'breadcrumbs': [
+        meta: this.getMeta(),
+        title: 'Logged in state',
+        header: 'Wow! You are logged in!',
+        description: "Great, so glad you're in.",
+        breadcrumbs: [
           {
-            'title': 'Hemsida',
-            'href': '/',
+            title: 'Hemsida',
+            href: '/',
           },
         ],
-        'content': 'Congrats, you are logged in',
+        content: 'Congrats, you are logged in',
       };
     } else {
       return {
-        'meta': this.getMeta(),
-        'title': 'Hemsida',
-        'header': 'Hej!',
-        'description': 'Så mycket skulle kunna skrivas här, men det ser redan bra ut.',
-        'breadcrumbs': [
+        meta: this.getMeta(),
+        title: 'Hemsida',
+        header: 'Hej!',
+        description:
+          'Så mycket skulle kunna skrivas här, men det ser redan bra ut.',
+        breadcrumbs: [
           {
-            'title': 'Hemsida',
-            'href': '/',
+            title: 'Hemsida',
+            href: '/',
           },
         ],
-        'content': 'Hello.',
+        content: 'Hello.',
       };
     }
+  }
 
-  };
+  getNavigation(): any {
+    return {
+      menu: [
+        {
+          title: 'Hemsida',
+          href: '/',
+          active: true,
+        },
+      ],
+      buttons: [
+        {
+          title: 'UI Kit',
+          href: '/kit.html',
+          color: 'InfoGreen',
+        },
+      ],
+    };
+  }
 
-
-
-
+  getSession(hash: string): any {
+    if (hash == 'auth') {
+      return {
+        authorized: true,
+        user: {
+          login: 'user',
+          name: 'UserMan',
+        },
+      };
+    } else {
+      return {
+        authorized: false,
+      };
+    }
+  }
 }

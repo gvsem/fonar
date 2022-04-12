@@ -31,9 +31,9 @@ export class UserController {
     status: 404,
     description: 'No user was found by the provided id.',
   })
-  @Get(':id')
-  async getUser(userId = 1, @Param('id') id) {
-    return this.userService.getUser(userId, id);
+  @Get(':login')
+  async getUser(userId = 1, @Param('login') login) {
+    return this.userService.getUser(userId, login);
   }
 
   @ApiOperation({
@@ -49,7 +49,7 @@ export class UserController {
     status: 400,
     description: 'User has not been created.',
   })
-  @Post('new')
+  @Post('/')
   createUser(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
   }
@@ -57,18 +57,21 @@ export class UserController {
   @ApiOperation({
     summary: 'Update user',
   })
-  @ApiParam({ name: 'id', type: 'string' })
   @ApiBody({ type: UpdateUserDto })
   @ApiResponse({
-    status: 201,
+    status: 204,
     description:
-      'User has been successfully updated and presented within a response.',
+      'User has been successfully updated.',
   })
   @ApiResponse({
     status: 400,
     description: 'User has not been updated.',
   })
-  @Put(':id')
+  @ApiResponse({
+    status: 401,
+    description: 'Not authorized.',
+  })
+  @Put(':login')
   updateReplique(userId = 1, @Body() dto: UpdateUserDto) {
     return this.userService.updateUser(userId, dto);
   }

@@ -1,15 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import {
-  ApiBearerAuth, ApiBody,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse,
-  ApiTags
-} from "@nestjs/swagger";
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { RepliqueService } from './replique.service';
-import { CreateRepliqueDto } from "./dto/create.replique.dto";
-import { UpdateRepliqueDto } from "./dto/update.replique.dto";
+import { CreateRepliqueDto } from './dto/create.replique.dto';
+import { UpdateRepliqueDto } from './dto/update.replique.dto';
 
 @ApiBearerAuth()
 @ApiTags('replique')
@@ -49,7 +58,7 @@ export class RepliqueController {
     description: 'Replique has not been created.',
   })
   @Post('/')
-  createReplique(userId: number = 1, @Body() dto: CreateRepliqueDto) {
+  createReplique(userId = 1, @Body() dto: CreateRepliqueDto) {
     return this.repliqueService.createReplique(userId, dto);
   }
 
@@ -59,19 +68,18 @@ export class RepliqueController {
   @ApiParam({ name: 'id', type: 'string' })
   @ApiBody({ type: UpdateRepliqueDto })
   @ApiResponse({
-    status: 201,
+    status: 204,
     description:
-      'Replique has been successfully updated and presented within a response.',
+      'Replique has been successfully updated.',
   })
   @ApiResponse({
     status: 400,
     description: 'Replique has not been updated.',
   })
   @Put(':id')
-  updateReplique(userId: number = 1, @Body() dto: UpdateRepliqueDto) {
+  updateReplique(userId = 1, @Body() dto: UpdateRepliqueDto) {
     return this.repliqueService.updateReplique(userId, dto);
   }
-
 
   @ApiOperation({
     summary: 'Connect replique with its origin',
@@ -79,9 +87,8 @@ export class RepliqueController {
   @ApiParam({ name: 'id', type: 'string' })
   @ApiParam({ name: 'oid', type: 'string' })
   @ApiResponse({
-    status: 201,
-    description:
-      'Replique has been successfully connected.',
+    status: 204,
+    description: 'Replique has been successfully connected.',
   })
   @ApiResponse({
     status: 400,
@@ -93,7 +100,8 @@ export class RepliqueController {
   })
   @ApiResponse({
     status: 405,
-    description: 'Circular origination is not available for provided repliques.',
+    description:
+      'Circular origination is not available for provided repliques.',
   })
   @Post(':id/originates/:oid')
   async originateReplique(userId = 1, @Param('id') id, @Param('oid') originId) {
@@ -106,7 +114,7 @@ export class RepliqueController {
   @ApiParam({ name: 'id', type: 'string' })
   @ApiParam({ name: 'oid', type: 'string' })
   @ApiResponse({
-    status: 201,
+    status: 204,
     description: 'Replique has been successfully disconnected.',
   })
   @ApiResponse({
@@ -122,9 +130,11 @@ export class RepliqueController {
     description: 'This origin can not be disconnected.',
   })
   @Delete(':id/originates/:oid')
-  async deleteOriginationReplique(userId = 1, @Param('id') id, @Param('oid') originId) {
+  async deleteOriginationReplique(
+    userId = 1,
+    @Param('id') id,
+    @Param('oid') originId,
+  ) {
     return this.repliqueService.removeOriginatingReplique(userId, id, originId);
   }
-
-
 }

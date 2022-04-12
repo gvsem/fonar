@@ -48,7 +48,7 @@ export class ReponseController {
     status: 400,
     description: 'Reponse has not been created.',
   })
-  @Post('new')
+  @Post('/')
   createReponse(userId = 1, @Body() dto: CreateReponseDto) {
     return this.reponseService.createReponse(userId, dto);
   }
