@@ -12,7 +12,7 @@ export class UserService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
 
-  async getUser(userId: number, username?: string): Promise<User | undefined> {
+  async getUser(userId: number, username?: string): Promise<User> {
     if (username === undefined) {
       const user = await this.userRepository.findOne({ where: { id: userId } } );
       if (user === undefined) {
@@ -28,18 +28,18 @@ export class UserService {
     }
   }
 
-  async updateUser(userId: number, userDto: UpdateUserDto ) :  Promise<User | undefined> {
+  async updateUser(userId: number, userDto: UpdateUserDto ) :  Promise<User> {
     const user = await this.getUser(userId);
-    if (userDto.firstName) {
+    if (userDto.firstName !== undefined) {
       user.firstName = userDto.firstName;
     }
-    if (userDto.lastName) {
+    if (userDto.lastName !== undefined) {
       user.lastName = userDto.lastName;
     }
-    if (userDto.authorAlias) {
+    if (userDto.authorAlias !== undefined) {
       user.authorAlias = userDto.authorAlias;
     }
-    if (userDto.isPrivate) {
+    if (userDto.isPrivate !== undefined) {
       user.isPrivate = userDto.isPrivate;
     }
     return await this.userRepository.save(user);

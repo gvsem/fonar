@@ -15,10 +15,10 @@ export class Replique extends Publication {
   @Column({ nullable: false })
   title: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, default: null })
   abstractText: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, default: null })
   content: string;
 
   @ManyToOne(() => User, (user) => user.repliques)
