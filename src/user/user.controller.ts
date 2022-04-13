@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  UseFilters, UseInterceptors
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -11,10 +22,13 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
+import { HttpExceptionFilter } from "../http.exception.filter";
 
 @ApiBearerAuth()
 @ApiTags('user')
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -33,7 +47,12 @@ export class UserController {
   })
   @Get(':login')
   async getUser(userId = 1, @Param('login') login) {
-    return this.userService.getUser(userId, login);
+    try {
+      const replique = await this.userService.getUser(userId, login);
+      return replique;
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+    }
   }
 
   @ApiOperation({
@@ -50,8 +69,12 @@ export class UserController {
     description: 'User has not been created.',
   })
   @Post('/')
-  createUser(@Body() dto: CreateUserDto) {
-    return this.userService.createUser(dto);
+  async createUser(@Body() dto: CreateUserDto) {
+    try {
+      return await this.userService.createUser(dto);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @ApiOperation({
@@ -71,8 +94,12 @@ export class UserController {
     status: 401,
     description: 'Not authorized.',
   })
-  @Put(':login')
-  updateReplique(userId = 1, @Body() dto: UpdateUserDto) {
-    return this.userService.updateUser(userId, dto);
+  @Put('/')
+  async updateUser(userId = 1, @Body() dto: UpdateUserDto) {
+    try {
+      return await this.userService.updateUser(userId, dto);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseFilters } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -10,10 +10,12 @@ import {
 
 import { ReponseService } from './reponse.service';
 import { CreateReponseDto } from './dto/create.reponse.dto';
+import { HttpExceptionFilter } from "../http.exception.filter";
 
 @ApiBearerAuth()
 @ApiTags('reponse')
 @Controller('reponse')
+@UseFilters(new HttpExceptionFilter())
 export class ReponseController {
   constructor(private readonly reponseService: ReponseService) {}
 
@@ -32,7 +34,7 @@ export class ReponseController {
   })
   @Get(':id')
   async getReponse(userId = 1, @Param('id') id) {
-    return this.reponseService.getReponse(userId, id);
+    return await this.reponseService.getReponse(userId, id);
   }
 
   @ApiOperation({
@@ -49,7 +51,7 @@ export class ReponseController {
     description: 'Reponse has not been created.',
   })
   @Post('/')
-  createReponse(userId = 1, @Body() dto: CreateReponseDto) {
-    return this.reponseService.createReponse(userId, dto);
+  async createReponse(userId = 1, @Body() dto: CreateReponseDto) {
+    return await this.reponseService.createReponse(userId, dto);
   }
 }

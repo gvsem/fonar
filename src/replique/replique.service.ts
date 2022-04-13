@@ -1,47 +1,88 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Inject, Injectable, NotImplementedException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { Replique } from './replique.entity';
-import { CreateRepliqueDto } from './dto/create.replique.dto';
-import { UpdateRepliqueDto } from './dto/update.replique.dto';
+import { Replique } from "./replique.entity";
+import { CreateRepliqueDto } from "./dto/create.replique.dto";
+import { UpdateRepliqueDto } from "./dto/update.replique.dto";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class RepliqueService {
+
   @InjectRepository(Replique)
   private repliqueRepository: Repository<Replique>;
 
-  getReplique(
+  @Inject(UserService)
+  private userService: UserService;
+
+  async getReplique(
     userId: number,
-    repliqueId: string,
-  ): Promise<Replique | undefined> {
-    throw new NotImplementedException();
-    // return this.repliqueRepository.findOne({ where: { id: repliqueId } });
+    repliqueId: number
+  ): Promise<Replique> {
+    const r = await this.repliqueRepository.findOne({ where: { id: repliqueId } });
+    console.log(r);
+    if (r === undefined) {
+      throw new Error('Replique with id ' + repliqueId + ' not found.');
+    }
+    return r;
   }
 
-  createReplique(
+  async createReplique(
     userId: number,
-    repliqueDto: CreateRepliqueDto,
-  ): Promise<Replique | undefined> {
-    throw new NotImplementedException();
-    // const replique = new Replique();
-    // replique.title = repliqueDto.title;
-    // return this.repliqueRepository.save(replique);
+    repliqueDto: CreateRepliqueDto
+  ): Promise<Replique> {
+
+    const user = await this.userService.getUser(userId);
+
+    const replique = new Replique();
+    replique.title = repliqueDto.title;
+    replique.abstractText = null;
+    replique.content = null;
+    replique.creator = user;
+    replique.isPublished = false;
+    replique.isActive = true;
+    replique.creationDate = new Date();
+
+    return await this.repliqueRepository.save(replique);
   }
 
-  updateReplique(
+  async updateReplique(
     userId: number,
-    dto: UpdateRepliqueDto,
+    repliqueId: number,
+    repliqueDto: UpdateRepliqueDto
   ): Promise<Replique | undefined> {
-    throw new NotImplementedException();
+
+    const replique = await this.getReplique(userId, repliqueId);
+    if (repliqueDto.title) {
+      replique.title = repliqueDto.title;
+    }
+    if (repliqueDto.content) {
+      replique.content = repliqueDto.content;
+    }
+    if (repliqueDto.abstractText) {
+      replique.abstractText = repliqueDto.abstractText;
+    }
+
+    return await this.repliqueRepository.save(replique);
   }
 
-  originateReplique(userId: number, repliqueId : string, originId: string) : Promise<boolean> {
-    throw new NotImplementedException();
+  async originateReplique(userId: number, repliqueId: number, originId: number) {
+    const replique = await this.getReplique(userId, repliqueId);
+    const oReplique = await this.getReplique(userId, originId);
+    replique.discours.push(oReplique);
+    await this.repliqueRepository.save(replique);
   }
 
-  removeOriginatingReplique(userId: number, repliqueId: string, originId: string) : Promise<boolean> {
-    throw new NotImplementedException();
+  async removeOriginatingReplique(userId: number, repliqueId: number, originId: number) {
+    const replique = await this.getReplique(userId, repliqueId);
+    const oReplique = await this.getReplique(userId, originId);
+
+    replique.discours.forEach((e, index) => {
+      if (e == oReplique) delete replique.discours[index];
+    });
+
+    await this.repliqueRepository.save(replique);
   }
 
 }

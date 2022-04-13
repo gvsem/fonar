@@ -20,7 +20,7 @@ import { ReponseModule } from './reponse/reponse.module';
         rejectUnauthorized: false,
       },
       entities: [join(__dirname, '**', 'entities', '*.entity.{ts,js}')],
-      synchronize: true, // This for development
+      synchronize: true,
       autoLoadEntities: true,
     }),
     PageModule,
