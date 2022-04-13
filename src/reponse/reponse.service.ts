@@ -31,7 +31,11 @@ export class ReponseService {
   }
 
   async getReponse(userId: number, reponseId: string): Promise<Reponse> {
-    return await this.reponseRepository.findOne({ where: { id: reponseId } });
+    const reponse = await this.reponseRepository.findOne({ where: { id: reponseId } });
+    if (reponse === undefined) {
+      throw Error('The following reponse has not been found.');
+    }
+    return reponse;
   }
 
   async createReponse(userId: number, reponseDto: CreateReponseDto) : Promise<Reponse> {

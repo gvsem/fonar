@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseFilters } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put, UseFilters } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -34,7 +34,11 @@ export class ReponseController {
   })
   @Get(':id')
   async getReponse(userId = 1, @Param('id') id) {
-    return await this.reponseService.getReponse(userId, id);
+    try {
+      return await this.reponseService.getReponse(userId, id);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+    }
   }
 
   @ApiOperation({
@@ -52,6 +56,10 @@ export class ReponseController {
   })
   @Post('/')
   async createReponse(userId = 1, @Body() dto: CreateReponseDto) {
-    return await this.reponseService.createReponse(userId, dto);
+    try {
+      return await this.reponseService.createReponse(userId, dto);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
