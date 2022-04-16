@@ -3,6 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import * as hbs from 'hbs';
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
 
@@ -20,7 +21,18 @@ async function bootstrap() {
   if (process.env?.PORT) {
     port = parseInt(process.env.PORT);
   }
+
+  const config = new DocumentBuilder()
+    .setTitle('Fonar Social Network')
+    .setDescription('The Fonar API description')
+    .setVersion('0.4')
+    .addTag('replique')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(port);
 
 }
+
 bootstrap();

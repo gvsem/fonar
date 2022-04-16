@@ -1,18 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, ManyToMany, JoinTable} from 'typeorm';
-import { User } from './user.entity';
+import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export abstract class Publication {
-
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: 'timestamptz'
+    type: 'timestamptz',
   })
   creationDate: Date;
 
   @Column({
-    type: 'timestamptz', nullable: true
+    type: 'timestamptz',
+    nullable: true,
   })
   publicationDate: Date;
 
@@ -21,5 +20,4 @@ export abstract class Publication {
 
   @Column()
   isPublished: boolean;
-
 }
