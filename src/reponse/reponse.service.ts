@@ -1,18 +1,22 @@
-import { forwardRef, Inject, Injectable, NotImplementedException } from "@nestjs/common";
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from "typeorm";
+import { Repository } from 'typeorm';
 
 import { Reponse } from './reponse.entity';
 import { CreateReponseDto } from './dto/create.reponse.dto';
-import { Replique } from "../replique/replique.module";
-import { User } from "../user/user.module";
-import { RepliqueService } from "../replique/replique.service";
-import { UserService } from "../user/user.service";
-
+import { Replique } from '../replique/replique.module';
+import { User } from '../user/user.module';
+import { RepliqueService } from '../replique/replique.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ReponseService {
-
   @Inject(RepliqueService)
   private repliqueService: RepliqueService;
 
@@ -22,42 +26,43 @@ export class ReponseService {
   @InjectRepository(Reponse)
   private reponseRepository: Repository<Reponse>;
 
-  async getReponsesByReplique(userId: number, repliqueId: number): Promise<Reponse[]> {
+  async getReponsesByReplique(
+    userId: number,
+    repliqueId: number,
+  ): Promise<Reponse[]> {
     const replique = await this.repliqueService.getReplique(userId, repliqueId);
-    if (replique === undefined) {
-      throw Error('The following replique has not been found.');
-    }
     return replique.reponses;
   }
 
   async getReponse(userId: number, reponseId: string): Promise<Reponse> {
-    const reponse = await this.reponseRepository.findOne({ where: { id: reponseId } });
+    const reponse = await this.reponseRepository.findOne({
+      where: { id: reponseId },
+    });
     if (reponse === undefined) {
-      throw Error('The following reponse has not been found.');
+      throw new NotFoundException('The following reponse has not been found.');
     }
     return reponse;
   }
 
-  async createReponse(userId: number, reponseDto: CreateReponseDto) : Promise<Reponse> {
-    const replique = await this.repliqueService.getReplique(userId, reponseDto.repliqueId);
-    if (replique === undefined) {
-      throw Error('The following replique has not been found.');
-    }
-
+  async createReponse(
+    userId: number,
+    reponseDto: CreateReponseDto,
+  ): Promise<Reponse> {
+    const replique = await this.repliqueService.getReplique(
+      userId,
+      reponseDto.repliqueId,
+    );
     const user = await this.userService.getUser(userId);
-    if (user === undefined) {
-      throw Error('The user has not been found.');
-    }
 
-    const reponse = new Reponse();
-    reponse.replique = replique;
-    reponse.creator = user;
-    reponse.isPublished = true;
-    reponse.isActive = true;
-    reponse.creationDate = new Date();
-    reponse.text = reponseDto.text;
+    const reponse = {
+      replique: replique,
+      creator: user,
+      isPublished: true,
+      isActive: true,
+      creationDate: new Date(),
+      text: reponseDto.text,
+    };
 
     return await this.reponseRepository.save(reponse);
   }
-
 }

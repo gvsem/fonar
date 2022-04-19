@@ -24,7 +24,11 @@ async function bootstrap() {
     port = parseInt(process.env.PORT);
   }
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    disableErrorMessages: false,
+    dismissDefaultMessages: false,
+    enableDebugMessages: true,
+  }));
   
   const config = new DocumentBuilder()
     .setTitle("Fonar Social Network")

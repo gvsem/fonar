@@ -8,8 +8,9 @@ import {
   Param,
   Post,
   Put,
-  UseFilters, UseInterceptors
-} from "@nestjs/common";
+  UseFilters,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,7 +23,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { HttpExceptionFilter } from "../http.exception.filter";
+import { HttpExceptionFilter } from '../http.exception.filter';
+import { RepliqueService } from '../replique/replique.service';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -30,7 +32,10 @@ import { HttpExceptionFilter } from "../http.exception.filter";
 @UseInterceptors(ClassSerializerInterceptor)
 @UseFilters(new HttpExceptionFilter())
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly repliqueService: RepliqueService,
+  ) {}
 
   @ApiOperation({
     summary: 'Get user',
@@ -83,8 +88,7 @@ export class UserController {
   @ApiBody({ type: UpdateUserDto })
   @ApiResponse({
     status: 204,
-    description:
-      'User has been successfully updated.',
+    description: 'User has been successfully updated.',
   })
   @ApiResponse({
     status: 400,
@@ -101,5 +105,44 @@ export class UserController {
     } catch (e: any) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @ApiOperation({
+    summary: "Get user's repliques",
+  })
+  @ApiParam({ name: 'login', type: 'string', example: 'gumilev' })
+  @ApiParam({ name: 'skip', type: 'number', required: false, example: 0 })
+  @ApiParam({ name: 'quantity', type: 'number', required: false, example: 5 })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Repliques have been successfully retrieved and presented within a response.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No user was found by the provided login.',
+  })
+  @Get('/:login/repliques/:skip?/:quantity?')
+  async getRepliques(
+    userId = 1,
+    @Param('login') login: string,
+    @Param('skip') skip?: number,
+    @Param('quantity') quantity?: number,
+  ) {
+    if (skip === undefined) {
+      skip = 0;
+    }
+    if (quantity === undefined) {
+      quantity = 5;
+    }
+
+    const profile = await this.userService.getUser(userId, login);
+    return await this.repliqueService.getRepliques(
+      userId,
+      login,
+      skip,
+      quantity,
+      profile.id == userId ? undefined : true,
+    );
   }
 }
