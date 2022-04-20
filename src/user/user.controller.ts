@@ -8,9 +8,9 @@ import {
   Param,
   Post,
   Put,
-  UseFilters,
-  UseInterceptors,
-} from '@nestjs/common';
+  UseFilters, UseGuards,
+  UseInterceptors
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -25,6 +25,9 @@ import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { HttpExceptionFilter } from '../http.exception.filter';
 import { RepliqueService } from '../replique/replique.service';
+import { AuthGuard } from "../auth/auth.guard";
+import { Session } from "../auth/session.decorator";
+import { SessionContainer } from "supertokens-node/lib/build/recipe/session/faunadb";
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -52,12 +55,8 @@ export class UserController {
   })
   @Get(':login')
   async getUser(userId = 1, @Param('login') login) {
-    try {
       const replique = await this.userService.getUser(userId, login);
       return replique;
-    } catch (e: any) {
-      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
-    }
   }
 
   @ApiOperation({
@@ -75,11 +74,7 @@ export class UserController {
   })
   @Post('/')
   async createUser(@Body() dto: CreateUserDto) {
-    try {
       return await this.userService.createUser(dto);
-    } catch (e: any) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-    }
   }
 
   @ApiOperation({
@@ -99,12 +94,9 @@ export class UserController {
     description: 'Not authorized.',
   })
   @Put('/')
-  async updateUser(userId = 1, @Body() dto: UpdateUserDto) {
-    try {
+  @UseGuards(AuthGuard)
+  async updateUser(@Session() session: SessionContainer, userId = 1, @Body() dto: UpdateUserDto) {
       return await this.userService.updateUser(userId, dto);
-    } catch (e: any) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-    }
   }
 
   @ApiOperation({

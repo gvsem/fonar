@@ -1,0 +1,12 @@
+{
+	"version": 3,
+	"file": "style.css",
+	"sources": [
+		"../../sass/style.scss"
+	],
+	"sourcesContent": [
+		"@charset \"utf-8\";\n\n// Import a Google Font\n@import url('https://fonts.googleapis.com/css?family=Inter:100,200,300,400,500,600,700,800,900');\n\n// Set your brand colors\n$logoBackground: #364968;\n$logoText: #FDDF97;\n\n$pink: #FA7C21;\n$brown: #757763;\n$beige-light: #D0D1CD;\n$beige-lighter: #EFF0EB;\n\n//012jj\n\n// Update Bulma's global variables\n//$family-sans-serif: \"Inter\", sans-serif;\n$title-family: \"Inter\", sans-serif;\n//$grey-dark: $brown;\n//$grey-light: $beige-light;\n\n$primary-dark: $logoBackground;\n\n\n\n$link: $pink;\n$widescreen-enabled: false;\n$fullhd-enabled: false;\n\n// Update some of Bulma's component variables\n$body-background-color: $beige-lighter;\n$control-border-width: 2px;\n$input-border-color: transparent;\n$input-shadow: none;\n\n// Import only what you need from Bulma\n\n"
+	],
+	"names": [],
+	"mappings": "AAGA,OAAO,CAAC,wFAAI"
+}

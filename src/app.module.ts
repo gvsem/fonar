@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { PageModule } from './page/page.module';
 import { RepliqueModule } from './replique/replique.module';
 import { ReponseModule } from './reponse/reponse.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,7 +24,19 @@ import { ReponseModule } from './reponse/reponse.module';
       synchronize: true,
       autoLoadEntities: true,
     }),
+    AuthModule.forRoot({
+      // These are the connection details of the app you created on supertokens.com
+      connectionURI: process.env?.AuthURI,
+      apiKey: process.env?.AuthToken,
+      appInfo: {
+        // Learn more about this on https://supertokens.com/docs/thirdpartyemailpassword/appinfo
+        appName: "Fonar",
+        apiDomain: process.env?.ApiDomain,
+        websiteDomain: process.env?.ApiDomain,
+      },
+    }),
     PageModule,
+    AuthModule,
     UserModule,
     RepliqueModule,
     ReponseModule,

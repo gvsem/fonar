@@ -7,7 +7,7 @@ import { PageService } from './page.service';
 export class PageController {
   constructor(private readonly pageService: PageService) {}
 
-  @Get()
+  @Get('/main')
   @Render('index')
   root() {
     return {
