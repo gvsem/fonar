@@ -7,10 +7,10 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put,
+  Put, Query,
   UseFilters,
-  UseInterceptors,
-} from '@nestjs/common';
+  UseInterceptors
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -126,8 +126,8 @@ export class UserController {
   async getRepliques(
     userId = 1,
     @Param('login') login: string,
-    @Param('skip') skip?: number,
-    @Param('quantity') quantity?: number,
+    @Query('skip') skip?: number,
+    @Query('quantity') quantity?: number,
   ) {
     if (skip === undefined) {
       skip = 0;
