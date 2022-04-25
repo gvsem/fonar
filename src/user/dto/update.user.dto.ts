@@ -1,8 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString, Length } from "class-validator";
+import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateUserDto {
-
   @ApiProperty({
     title: 'Last Name',
     example: 'Gumilev',
@@ -30,7 +29,7 @@ export class UpdateUserDto {
   @ApiProperty({
     title: 'Invisibility of profile',
     description: 'Determines visibility of profile to other users',
-    example: false
+    example: false,
   })
   @ApiPropertyOptional()
   @IsOptional()
@@ -48,5 +47,4 @@ export class UpdateUserDto {
   @IsString()
   @Length(6, 25)
   public authorAlias?: string;
-
 }

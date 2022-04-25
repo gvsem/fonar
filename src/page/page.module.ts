@@ -1,17 +1,25 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PageController } from './page.controller';
 import { PageService } from './page.service';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TranslationService } from './translation/translation.service';
+import { UserModule } from '../user/user.module';
+import { RepliqueModule } from '../replique/replique.module';
 
 console.log(__dirname);
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({rootPath: join(__dirname, '..', '..', 'public'), serveRoot: '/'}),
-    //ServeStaticModule.forRoot({rootPath: join(__dirname, '..', '..', 'node_modules'), serveRoot: '/dist'}),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'public'),
+      serveRoot: '/',
+    }),
+    forwardRef(() => UserModule),
+    forwardRef(() => RepliqueModule),
   ],
   controllers: [PageController],
-  providers: [PageService],
+  providers: [PageService, TranslationService],
+  exports: [PageService],
 })
 export class PageModule {}

@@ -1,10 +1,7 @@
 import {
-  HttpException,
-  HttpStatus,
   Inject,
   Injectable,
   NotFoundException,
-  NotImplementedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,7 +10,6 @@ import { Replique } from './replique.entity';
 import { CreateRepliqueDto } from './dto/create.replique.dto';
 import { UpdateRepliqueDto } from './dto/update.replique.dto';
 import { UserService } from '../user/user.service';
-import { filter } from 'rxjs';
 
 @Injectable()
 export class RepliqueService {
@@ -113,8 +109,12 @@ export class RepliqueService {
     if (published !== undefined) {
       (filterOptions as any).isPublished = published;
     }
+    if (user.login != login) {
+      (filterOptions as any).isPublished = true;
+    }
 
     const [result, total] = await this.repliqueRepository.findAndCount({
+      relations: ['creator'],
       where: { creator: user.id, isActive: true, ...filterOptions },
       order: { publicationDate: 'DESC' },
       take: quantity,
@@ -127,4 +127,17 @@ export class RepliqueService {
     };
   }
 
+  async getFeed(userId: number, skip: number, quantity: number) {
+    const [result, total] = await this.repliqueRepository.findAndCount({
+      where: { isActive: true, isPublished: true },
+      order: { publicationDate: 'DESC' },
+      take: quantity,
+      skip: skip,
+    });
+
+    return {
+      data: result,
+      count: total,
+    };
+  }
 }

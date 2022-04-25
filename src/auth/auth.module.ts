@@ -6,22 +6,23 @@ import {
 } from '@nestjs/common';
 
 import { AuthMiddleware } from './auth.middleware';
-import { ConfigInjectionToken, AuthModuleConfig } from '../config.interface';
-import { SupertokensService } from "./supertokens.service";
-import { SupertokensExceptionFilter } from "./auth.filter";
-import { AuthGuard } from "./auth.guard";
+import { ConfigInjectionToken, AuthModuleConfig } from './config.interface';
+import { SupertokensService } from './supertokens/supertokens.service';
+import { AuthController } from './auth.controller';
+import { UserModule } from '../user/user.module';
+import { PageModule } from '../page/page.module';
 
-@Module({
-  providers: [],
-  exports: [],
-  controllers: [],
-})
+@Module({})
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('*');
   }
 
-  static forRoot({ connectionURI, apiKey, appInfo }: AuthModuleConfig): DynamicModule {
+  static forRoot({
+    connectionURI,
+    apiKey,
+    appInfo,
+  }: AuthModuleConfig): DynamicModule {
     return {
       providers: [
         {
@@ -33,12 +34,10 @@ export class AuthModule implements NestModule {
           provide: ConfigInjectionToken,
         },
         SupertokensService,
-        AuthMiddleware,
-        SupertokensExceptionFilter,
-        AuthGuard,
       ],
+      controllers: [AuthController],
       exports: [],
-      imports: [],
+      imports: [UserModule, PageModule],
       module: AuthModule,
     };
   }

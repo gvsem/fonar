@@ -1,78 +1,101 @@
 <!-- Navigation -->
-<header>
-    <nav class="header" id="menu">
-        <h1 class="logo">Georgii Semenov</h1>
-        <ul>
 
-            {{#each navigation.menu as |element|}}
-            {{#> childEntry}}
-                <li {{#if element.active}}
-                class="active"
-                {{/if}}>
-                    <a {{#if element.href}}
-                            href="{{element.href}}"
-                        {{/if}}>
-                        {{element.title}}
-                    </a>
-                </li>
-            {{/childEntry}}
-        {{/each}}
+<nav id="app-nav" class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      фонарь
+    </a>
 
-        {{#each navigation.buttons as |element|}}
-            {{#> childEntry}}
-                <ul>
-                    <li class="button b{{element.color}}" >
-                        <a href="{{element.href}}">{{element.title}}</a>
-                    </li>
-                </ul>
-            {{/childEntry}}
-        {{/each}}
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="app-nav-bar">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
 
-            {{#if session.authorized }}
-                <ul>
-                    <li class="button bBlue" >
-                        <a>Welcome, {{session.user.login}}!</a>
-                    </li>
-                </ul>
-            {{else}}
-                <ul>
-                    <li class="button bBlue" >
-                        <a href="/logged">Sign Up</a>
-                    </li>
-                </ul>
-            {{/if}}
+  <div id="app-nav-bar" class="navbar-menu has-shadow">
+    <div class="navbar-start">
 
-        </ul>
-    </nav>
+      {{#each navigation.menu as |element|}}
+        {{#> childEntry}}
 
-    <!-- с тегом header-floating становится летучей карточкой -->
-    <div class="page-header header-floating" id="page-header">
-        <div class="container">
-            <!--            <ul class="breadcrumb">-->
-            <!--                <li><a href="">Главная</a></li>-->
-            <!--                <li><a href="">Учеба</a></li>-->
-            <!--            </ul>-->
+          {{#if element.items}}
 
-            <ul class="breadcrumb">
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                {{element.title}}
+              </a>
 
-                <!--<li><a data-intro='Заблудшей душе всегда можно вернуться на Главную.'
-                        href="/">Главная</a></li> -->
+              <div class="navbar-dropdown">
 
-                {{#each page.breadcrumbs as |element|}}
-                    {{#> childEntry}}
-                        {{#if element.href}}
-                            <li><a href="{{ element.href }}">{{element.title}}</a></li>
-                        {{else}}
-                            <li>{{element.title}}</li>
-                        {{/if}}
-                    {{/childEntry}}
+                {{#each element.items as |dropdown_element|}}
+                  {{#> childEntry}}
+
+                    {{#if dropdown_element.divider }}
+
+                      <hr class="navbar-divider">
+
+                    {{else}}
+
+                      <a class="navbar-item" {{#if dropdown_element.href}}
+                         href="{{dropdown_element.href}}"
+                      {{/if}}>
+                        {{dropdown_element.title}}
+                      </a>
+
+                    {{/if}}
+
+                  {{/childEntry}}
                 {{/each}}
 
-            </ul>
+              </div>
+            </div>
+
+          {{else}}
+
+            <a class="navbar-item" {{#if element.href}}
+               href="{{element.href}}"
+            {{/if}}>
+              {{element.title}}
+            </a>
+
+          {{/if}}
 
 
-            <h1 data-intro='Это заголовочек у страницы! Он поможет разобраться, что на ней находится.'>{{ page.header }}</h1>
-            <p>{{page.description}}</p>
-        </div>
+        {{/childEntry}}
+      {{/each}}
+
+
     </div>
-</header>
+
+    <div class="navbar-end">
+
+      {{#if session.authorized }}
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" href="/me">
+              <strong>{{tr.navigation.user_greeting}}, {{session.user.login}}!</strong>
+            </a>
+            <a class="button is-light" href="{{ app.links.signout }}">
+              {{tr.navigation.sign_out}}
+            </a>
+          </div>
+        </div>
+      {{else}}
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" href="{{ app.links.signup }}">
+              <strong>{{tr.navigation.sign_up}}</strong>
+            </a>
+            <a class="button is-light" href="{{ app.links.signin }}">
+              {{tr.navigation.sign_in}}
+            </a>
+          </div>
+        </div>
+      {{/if}}
+
+
+    </div>
+  </div>
+</nav>
+

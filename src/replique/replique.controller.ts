@@ -4,8 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -51,7 +49,6 @@ export class RepliqueController {
     return await this.repliqueService.getReplique(userId, id);
   }
 
-
   @ApiOperation({
     summary: 'Create replique',
   })
@@ -94,6 +91,7 @@ export class RepliqueController {
     description: 'Replique has not been found.',
   })
   @Put(':id')
+  @HttpCode(204)
   async updateReplique(
     userId = 1,
     @Param('id') id: number,

@@ -1,0 +1,67 @@
+<div class="container">
+
+
+  <div class="tile is-ancestor">
+  <div class="tile is-vertical is-8">
+
+
+    {{#each user.repliques.data as |replique|}}
+      {{#> childEntry}}
+
+        <div class="tile is-parent">
+
+          <div class="card">
+
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-5">{{replique.title}}
+
+                    {{# if replique.isPublished }}
+                    {{else}}
+                      <span class="icon"><i class="fas fa-pencil-ruler"></i></span>
+                    {{/if}}
+
+                  </p>
+                  <a class="subtitle is-6" href="{{replique.creator.getPageURL}}">
+                    <span class="icon"><i class="fas fa-user"></i></span>
+                    {{replique.creator.firstName}} {{replique.creator.lastName}}
+                  </a>
+                </div>
+              </div>
+
+              <div class="content">
+               {{# if replique.abstract }}
+                 {{ replique.abstract }}
+               {{else}}
+                 {{ replique.content }}
+               {{/if}}
+
+                <br>
+                <time datetime="2016-1-1" timestamp="{{ replique.publicationDate }}"></time>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+
+      {{/childEntry}}
+    {{/each}}
+
+    <div class="tile is-parent">
+      <article class="tile is-child notification is-success">
+        <div class="content">
+          <p class="title">Tall tile</p>
+          <p class="subtitle">With even more content</p>
+          <div class="content">
+            <!-- Content -->
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+</div>

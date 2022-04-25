@@ -3,14 +3,12 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
-  Post,
   Put,
-  UseFilters, UseGuards,
-  UseInterceptors
-} from "@nestjs/common";
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -21,13 +19,12 @@ import {
 } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { HttpExceptionFilter } from '../http.exception.filter';
 import { RepliqueService } from '../replique/replique.service';
-import { AuthGuard } from "../auth/auth.guard";
-import { Session } from "../auth/session.decorator";
-import { SessionContainer } from "supertokens-node/lib/build/recipe/session/faunadb";
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { AppSession } from '../auth/session.decorator';
+import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -55,26 +52,7 @@ export class UserController {
   })
   @Get(':login')
   async getUser(userId = 1, @Param('login') login) {
-      const replique = await this.userService.getUser(userId, login);
-      return replique;
-  }
-
-  @ApiOperation({
-    summary: 'Create user',
-  })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({
-    status: 201,
-    description:
-      'User has been successfully created and presented within a response.',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'User has not been created.',
-  })
-  @Post('/')
-  async createUser(@Body() dto: CreateUserDto) {
-      return await this.userService.createUser(dto);
+    return await this.userService.getUser(userId, login);
   }
 
   @ApiOperation({
@@ -95,8 +73,12 @@ export class UserController {
   })
   @Put('/')
   @UseGuards(AuthGuard)
-  async updateUser(@Session() session: SessionContainer, userId = 1, @Body() dto: UpdateUserDto) {
-      return await this.userService.updateUser(userId, dto);
+  async updateUser(
+    @AppSession() session: SessionContainer,
+    userId = 1,
+    @Body() dto: UpdateUserDto,
+  ) {
+    return await this.userService.updateUser(userId, dto);
   }
 
   @ApiOperation({

@@ -1,17 +1,16 @@
 import { join } from 'path';
 
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { UserModule } from './user/user.module';
+import { User, UserModule } from './user/user.module';
 import { PageModule } from './page/page.module';
 import { RepliqueModule } from './replique/replique.module';
 import { ReponseModule } from './reponse/reponse.module';
 import { AuthModule } from './auth/auth.module';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -30,16 +29,16 @@ import { AuthModule } from './auth/auth.module';
       apiKey: process.env?.AuthToken,
       appInfo: {
         // Learn more about this on https://supertokens.com/docs/thirdpartyemailpassword/appinfo
-        appName: "Fonar",
+        appName: 'Fonar',
         apiDomain: process.env?.ApiDomain,
         websiteDomain: process.env?.ApiDomain,
       },
     }),
     PageModule,
-    AuthModule,
     UserModule,
     RepliqueModule,
     ReponseModule,
+    forwardRef(() => TypeOrmModule.forFeature([User])),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "css-build": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss assets/css/style.css",
-    "css-watch": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss assets/css/style.css --watch",
+    "css-build": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss ../assets/css/style.css",
+    "css-watch": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss ../assets/css/style.css --watch",
     "build": "npx webpack && npm run css-build"
   },
   "author": "",
@@ -14,7 +14,11 @@
   "dependencies": {
     "@vizuaalog/bulmajs": "^0.12.1",
     "bulma": "^0.9.3",
+    "bulma-validator": "^3.3.1",
+    "jquery": "^3.6.0",
+    "js-sha512": "^0.8.0",
     "react": "^18.0.0",
+    "supertokens-auth-react": "^0.20.4",
     "supertokens-website": "^10.0.10"
   },
   "devDependencies": {

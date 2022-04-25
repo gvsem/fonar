@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware } from "@nestjs/common";
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { middleware } from 'supertokens-node/framework/express';
 
 @Injectable()
@@ -12,5 +12,4 @@ export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: any, next: () => void) {
     return this.supertokensMiddleware(req, res, next);
   }
-
 }

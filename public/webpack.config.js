@@ -7,4 +7,10 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'assets', 'js'),
   },
+  entry: './src/js/auth.js',
+  devtool: 'source-map',
+  output: {
+    filename: 'auth.js',
+    path: path.resolve(__dirname, 'assets', 'js'),
+  },
 };
