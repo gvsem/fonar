@@ -1,0 +1,16 @@
+{
+  "navigation": {
+    "home_page": "Главная",
+    "all_users": "Авторы",
+    "feed": "Реплики",
+    "my_page": "Мой альманах",
+    "sign_in": "Войти",
+    "sign_up": "Присоединиться",
+    "user_greeting": "Привет",
+    "sign_out": "Выйти"
+  },
+  "signup": {
+    "user_login": "future localization",
+    "user_email": "future localization"
+  }
+}
