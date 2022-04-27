@@ -1,1 +1,7 @@
 <script type="module" src="/assets/js/main.js"></script>
+
+
+{{#if session.authorized }}
+  <script type="module" src="https://cdn.socket.io/4.4.1/socket.io.esm.min.js"></script>
+  <script type="module" src="/assets/js/socialbus.js"></script>
+{{/if}}

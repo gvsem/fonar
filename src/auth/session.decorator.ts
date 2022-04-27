@@ -22,6 +22,7 @@ export const AppSession = createParamDecorator(
           pageURL: request.user?.pageURL,
           firstName: request.user?.firstName,
           lastName: request.user?.lastName,
+          authorAlias: request.user?.authorAlias,
         },
       },
       navigation: PageService.getNavigation(tr),

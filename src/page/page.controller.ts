@@ -20,6 +20,7 @@ import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { PageExceptionFilter } from './page.exception.filter';
 import { UserOwnsRepliqueGuard } from '../replique/guards/owns.replique.guard';
+import { SocialBusGateway } from "../socialbus/reponse.gateway";
 
 @ApiTags('frontend')
 @Controller()
@@ -30,6 +31,7 @@ export class PageController {
     private readonly pageService: PageService,
     private readonly repliqueService: RepliqueService,
     private readonly userService: UserService,
+    private readonly bus: SocialBusGateway
   ) {}
 
   @Get('/')
@@ -86,6 +88,8 @@ export class PageController {
       0,
       10,
     );
+
+    await this.bus.notifyVisitor(r.user.id, app.session.user.authorAlias);
 
     return r;
   }
