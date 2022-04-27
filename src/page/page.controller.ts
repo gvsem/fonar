@@ -6,27 +6,24 @@ import {
   Redirect,
   Render,
   Req,
-  Res,
+  UnauthorizedException,
+  UseFilters,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-//import { LoggingInterceptor } from "./logging.interceptor";
 import { PageService } from './page.service';
-import { TranslationService } from './translation/translation.service';
 import { AppSession } from '../auth/session.decorator';
-import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
-
-import { Request, Response } from 'express';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
 import { UserAvailableGuard } from '../auth/guards/user.available.guard';
 import { RepliqueService } from '../replique/replique.service';
 import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
-//import { UserService } from "../user/user.service";
+import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { PageExceptionFilter } from './page.exception.filter';
+import { UserOwnsRepliqueGuard } from '../replique/guards/owns.replique.guard';
 
+@ApiTags('frontend')
 @Controller()
-//@UseInterceptors(LoggingInterceptor)
+@UseFilters(new PageExceptionFilter())
 @UseGuards(AuthGuard)
 export class PageController {
   constructor(
@@ -37,7 +34,6 @@ export class PageController {
 
   @Get('/')
   @Render('index')
-  @UseGuards(AuthGuard)
   async index(@AppSession() session) {
     return {
       ...session,
@@ -47,6 +43,7 @@ export class PageController {
 
   @Get('feed')
   @Render('index')
+  @UseGuards(AuthRequiredGuard)
   async feed(@AppSession() app) {
     const r: any = {
       ...app,
@@ -81,6 +78,8 @@ export class PageController {
     };
 
     r.user = await this.userService.getUserByURL(login);
+    r.page.my = app.session.authorized && app.session.user.login == login;
+
     r.user.repliques = await this.repliqueService.getRepliques(
       app.session.user.id,
       login,
@@ -88,6 +87,86 @@ export class PageController {
       10,
     );
 
+    return r;
+  }
+
+  @Get('u/:login/:repliqueId')
+  @Render('index')
+  @UseGuards(UserAvailableGuard)
+  async getReplique(
+    @Param('login') login: string,
+    @Param('repliqueId') repliqueId: number,
+    @AppSession() app,
+  ) {
+    const r: any = {
+      ...app,
+      page: { replique: true },
+    };
+
+    r.user = await this.userService.getUserByURL(login);
+    r.page.my = app.session.authorized && app.session.user.login == login;
+
+    r.replique = await this.repliqueService.getReplique(
+      app.session.user.id,
+      repliqueId,
+    );
+    r.replique.my =
+      app.session.authorized && app.session.user.id == r.replique.creator.id;
+    //r.replique.htmlContent = r.replique.htmlContent();
+
+    console.log(r.replique);
+    return r;
+  }
+
+  @Get('u/:login/:repliqueId/edit')
+  @Render('index')
+  @UseGuards(UserOwnsRepliqueGuard)
+  async editReplique(
+    @Param('login') login: string,
+    @Param('repliqueId') repliqueId: number,
+    @AppSession() app,
+  ) {
+    const r: any = {
+      ...app,
+      page: { replique_edit: true },
+    };
+
+    r.user = await this.userService.getUserByURL(login);
+    r.page.my = app.session.authorized && app.session.user.login == login;
+
+    r.replique = await this.repliqueService.getReplique(
+      app.session.user.id,
+      repliqueId,
+    );
+    r.replique.my =
+      app.session.authorized && app.session.user.id == r.replique.creator.id;
+    //r.replique.htmlContent = r.replique.htmlContent();
+
+    if (!r.replique.my) {
+      throw new UnauthorizedException(
+        'You do not own this replique to edit it.',
+      );
+    }
+
+    console.log(r.replique);
+    return r;
+  }
+
+  @Get('settings')
+  @Render('index')
+  @UseGuards(AuthRequiredGuard)
+  async setting(@AppSession() app) {
+    const r: any = {
+      ...app,
+      page: {
+        settings: true,
+        tab: { profile: true },
+      },
+    };
+
+    r.setting = {
+      user: await this.userService.getUser(app.session.user.id),
+    };
     return r;
   }
 }

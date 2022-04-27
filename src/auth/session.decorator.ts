@@ -17,7 +17,7 @@ export const AppSession = createParamDecorator(
       session: {
         authorized: request.user !== undefined,
         user: {
-          userId: request.user?.id,
+          id: request.user?.id,
           login: request.user?.login,
           pageURL: request.user?.pageURL,
           firstName: request.user?.firstName,

@@ -3,8 +3,8 @@ import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateUserDto {
   @ApiProperty({
-    title: 'Last Name',
-    example: 'Gumilev',
+    title: 'First Name',
+    example: 'Nikolai',
     minLength: 1,
     maxLength: 20,
   })
@@ -38,7 +38,7 @@ export class UpdateUserDto {
 
   @ApiProperty({
     title: 'Author Alias',
-    example: 'kolya',
+    example: 'kolyan',
     minLength: 6,
     maxLength: 25,
   })
@@ -47,4 +47,16 @@ export class UpdateUserDto {
   @IsString()
   @Length(6, 25)
   public authorAlias?: string;
+
+  @ApiProperty({
+    title: 'Bio',
+    example: 'Silver-century poet originating in Petrograd, Russian Empire',
+    minLength: 0,
+    maxLength: 80,
+  })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @Length(0, 80)
+  public bio?: string;
 }

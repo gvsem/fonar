@@ -30,4 +30,22 @@ export class Replique extends Publication {
 
   @OneToMany(() => Reponse, (reponse) => reponse.replique)
   reponses: Reponse[];
+
+  public getRepliqueURL(): string {
+    if (this.creator !== undefined) {
+      return this.creator.getPageURL() + '/' + this.id;
+    }
+    return '';
+  }
+
+  // public htmlContent() : string {
+  //   try {
+  //     const edjsParser = edjsHTML();
+  //     let doc: any = JSON.parse(this.content);
+  //     return edjsParser.parse(doc).join('');
+  //   } catch (e: any) {
+  //     console.log(e);
+  //     return this.content;
+  //   }
+  // }
 }

@@ -102,3 +102,19 @@ $navbar-dropdown-item-hover-background-color: $logo-text;
   color: #4a4a4a;
 }
 
+.is-success-animated{
+  @extend .is-success;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+.is-danger-animated{
+  @extend .is-danger;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+

@@ -8,10 +8,12 @@ import {
   Post,
   Put,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -20,12 +22,12 @@ import {
 
 import { ReponseService } from './reponse.service';
 import { CreateReponseDto } from './dto/create.reponse.dto';
-import { HttpExceptionFilter } from '../http.exception.filter';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('reponse')
-@Controller('reponse')
-@UseFilters(new HttpExceptionFilter())
+@Controller('/api/reponse')
+@UseGuards(AuthRequiredGuard)
 export class ReponseController {
   constructor(private readonly reponseService: ReponseService) {}
 

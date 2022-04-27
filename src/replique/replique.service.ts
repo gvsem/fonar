@@ -2,6 +2,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +11,7 @@ import { Replique } from './replique.entity';
 import { CreateRepliqueDto } from './dto/create.replique.dto';
 import { UpdateRepliqueDto } from './dto/update.replique.dto';
 import { UserService } from '../user/user.service';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
 @Injectable()
 export class RepliqueService {
@@ -21,9 +23,10 @@ export class RepliqueService {
 
   async getReplique(userId: number, repliqueId: number): Promise<Replique> {
     const r = await this.repliqueRepository.findOne({
-      where: { id: repliqueId },
+      relations: ['creator'],
+      where: { id: repliqueId, isActive: true },
     });
-    if (r === undefined) {
+    if (r === undefined || (r.creator.id !== userId && !r.isPublished)) {
       throw new NotFoundException(
         'Replique with id ' + repliqueId + ' not found.',
       );
@@ -35,8 +38,6 @@ export class RepliqueService {
     userId: number,
     repliqueDto: CreateRepliqueDto,
   ): Promise<Replique> {
-    console.log(repliqueDto);
-
     const user = await this.userService.getUser(userId);
 
     const replique = new Replique();
@@ -109,7 +110,7 @@ export class RepliqueService {
     if (published !== undefined) {
       (filterOptions as any).isPublished = published;
     }
-    if (user.login != login) {
+    if (user.id != userId) {
       (filterOptions as any).isPublished = true;
     }
 
@@ -129,6 +130,7 @@ export class RepliqueService {
 
   async getFeed(userId: number, skip: number, quantity: number) {
     const [result, total] = await this.repliqueRepository.findAndCount({
+      relations: ['creator'],
       where: { isActive: true, isPublished: true },
       order: { publicationDate: 'DESC' },
       take: quantity,

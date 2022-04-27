@@ -1,67 +1,96 @@
-<div class="container">
+<div class="container" style="margin-top: 15px;">
 
 
-  <div class="tile is-ancestor">
-  <div class="tile is-vertical is-8">
+  <!--  <div class="tile is-ancestor">-->
+  <!--    <div class="tile is-vertical">-->
 
+  <div class="columns">
 
-    {{#each user.repliques.data as |replique|}}
-      {{#> childEntry}}
+    <div class="column">
 
-        <div class="tile is-parent">
+      {{#if user.repliques.count }}
 
-          <div class="card">
+        {{#each user.repliques.data as |replique|}}
+          {{#> childEntry}}
 
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-5">{{replique.title}}
+            <div class="card" style="margin-top: 5px; margin-bottom: 5px;">
 
-                    {{# if replique.isPublished }}
-                    {{else}}
-                      <span class="icon"><i class="fas fa-pencil-ruler"></i></span>
-                    {{/if}}
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-5" style="margin: auto;">
+                      <a href="{{replique.getRepliqueURL}}">{{replique.title}}</a>
 
-                  </p>
-                  <a class="subtitle is-6" href="{{replique.creator.getPageURL}}">
-                    <span class="icon"><i class="fas fa-user"></i></span>
-                    {{replique.creator.firstName}} {{replique.creator.lastName}}
-                  </a>
+                      {{# if replique.isPublished }}
+                      {{else}}
+                        <span class="tag is-link is-6">набросок</span>
+                        <!-- <span class="icon"><i class="fas fa-pencil-ruler"></i></span> -->
+                      {{/if}}
+
+                    </p>
+                    <a class="subtitle is-6" href="{{replique.creator.getPageURL}}">
+                      <span class="icon"><i class="fas fa-user"></i></span>
+                      {{replique.creator.authorAlias}}
+                    </a>
+                  </div>
+                </div>
+
+                <div class="content">
+                  {{# if replique.abstractText }}
+                    {{ replique.abstractText }}
+                  {{else}}
+                    <div class="replique-content is-hidden" replique-id="{{ replique.id }}" style="border-width: 1px;">{{{replique.content}}}</div>
+                  {{/if}}
+
+                  <br>
+                  <time datetime="2016-1-1" timestamp="{{ replique.publicationDate }}"></time>
                 </div>
               </div>
+            </div>
 
-              <div class="content">
-               {{# if replique.abstract }}
-                 {{ replique.abstract }}
-               {{else}}
-                 {{ replique.content }}
-               {{/if}}
 
-                <br>
-                <time datetime="2016-1-1" timestamp="{{ replique.publicationDate }}"></time>
-              </div>
+
+          {{/childEntry}}
+        {{/each}}
+
+      {{else}}
+        <div class="content">
+
+          <h3>Кажется, опубликованных реплик нет.</h3>
+
+          <blockquote style="max-width: 400px;">
+            <p style="font-weight: bold;">
+              Куда, куда вы удалились,<br>
+              Весны моей златые дни? <br>
+            </p>
+            <i>«Евгений Онегин», А. С. Пушкин</i>
+          </blockquote>
+
+        </div>
+      {{/if}}
+
+    </div>
+
+    {{# if page.my }}
+      <div class="column is-4">
+        <article class="tile is-child notification is-link">
+          <div class="content">
+            <p class="title">Новая реплика</p>
+            <p class="subtitle">Введите заголовок, чтобы создать набросок:</p>
+            <div class="content">
+              <input id="create-replique" class="input is-normal" name="title" type="text"
+                     placeholder="Название реплики"
+                     value="">
             </div>
           </div>
-
-        </div>
-
-
+        </article>
       </div>
 
-      {{/childEntry}}
-    {{/each}}
+    {{/if}}
 
-    <div class="tile is-parent">
-      <article class="tile is-child notification is-success">
-        <div class="content">
-          <p class="title">Tall tile</p>
-          <p class="subtitle">With even more content</p>
-          <div class="content">
-            <!-- Content -->
-          </div>
-        </div>
-      </article>
-    </div>
   </div>
 
+  <!--  </div>-->
+
+  <!--</div>-->
 </div>

@@ -86,6 +86,9 @@ export class UserService {
     if (userDto.isPrivate !== undefined) {
       user.isPrivate = userDto.isPrivate;
     }
+    if (userDto.bio !== undefined) {
+      user.bio = userDto.bio;
+    }
     return await this.userRepository.save(user);
   }
 

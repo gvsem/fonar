@@ -10,7 +10,8 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import supertokens from 'supertokens-node';
 import { SupertokensExceptionFilter } from './auth/auth.filter';
-import { HttpExceptionFilter } from './http.exception.filter';
+
+import { ApiExceptionFilter } from './api.exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -25,7 +26,7 @@ async function bootstrap() {
     allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
     credentials: true,
   });
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new ApiExceptionFilter());
 
   // let handlebars = hbs.create({
   //     extname: "hbs",
@@ -95,6 +96,7 @@ async function bootstrap() {
     .setDescription('The Fonar API description')
     .setVersion('0.4')
     .addTag('fonar')
+    .addCookieAuth('sAccessToken')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

@@ -33,6 +33,5 @@ export class AppController {
     } catch (e: any) {
       console.log(e);
     }
-
   }
 }

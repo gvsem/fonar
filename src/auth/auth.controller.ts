@@ -6,37 +6,77 @@ import {
   Param,
   Post,
   Render,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import * as emailpassword from 'supertokens-node/lib/build/recipe/emailpassword';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+//import * as session from 'supertokens-node/lib/build/;
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from '../user/dto/create.user.dto';
 import { UserService } from '../user/user.service';
 import { AuthGuard } from './guards/auth.guard';
 import { AppSession } from './session.decorator';
+import supertokens from 'supertokens-node';
+import session from 'supertokens-node/recipe/session';
 
+@ApiTags('auth')
 @Controller('/')
 export class AuthController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/auth/signin')
-  @Render('auth')
   @UseGuards(AuthGuard)
-  async login(@AppSession() session) {
-    return {
-      ...session,
-      page: { auth: { signin: true } },
-    };
+  async login(@Res() resp, @AppSession() app) {
+    if (app.session.authorized) {
+      resp.redirect('/me');
+      return;
+    }
+    return resp.render(
+      'auth',
+      {
+        ...app,
+        page: { auth: { signin: true } },
+      },
+      function (err, html) {
+        resp.send(html);
+      },
+    );
   }
 
   @Get('/auth/signup')
-  @Render('auth')
   @UseGuards(AuthGuard)
-  async signup(@AppSession() session) {
-    return {
-      ...session,
-      page: { auth: { signup: true } },
-    };
+  async signup(@Res() resp, @AppSession() app) {
+    if (app.session.authorized) {
+      resp.redirect('/me');
+      return;
+    }
+    return resp.render(
+      'auth',
+      {
+        ...app,
+        page: { auth: { signup: true } },
+      },
+      function (err, html) {
+        resp.send(html);
+      },
+    );
+  }
+
+  @Get('/auth/signout')
+  @UseGuards(AuthGuard)
+  async signout(@Req() req, @Res() resp, @AppSession() app) {
+    if (app.session.authorized) {
+      await req.session.revokeSession();
+    }
+    resp.redirect('/');
   }
 
   @ApiOperation({

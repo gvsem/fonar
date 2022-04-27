@@ -11,16 +11,16 @@ export class User {
   @Column({ nullable: true })
   foreignAuthId: string;
 
-  @Column({ nullable: false, default: 'null' })
+  @Column({ nullable: false })
   login: string;
 
-  @Column({ nullable: false, default: 'null' })
+  @Column({ nullable: true })
   authorAlias: string;
 
-  @Column({ nullable: false, default: 'null' })
+  @Column({ nullable: false })
   pageURL: string;
 
-  @Column({ nullable: false, default: 'null' })
+  @Column({ nullable: false })
   email: string;
 
   @Column()
@@ -28,6 +28,9 @@ export class User {
 
   @Column()
   lastName: string;
+
+  @Column({ nullable: true })
+  bio: string;
 
   @Column({ default: true })
   isActive: boolean;

@@ -18,7 +18,7 @@ import { UserService } from '../../user/user.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
   @Inject(UserService)
-  private userService: UserService;
+  protected userService: UserService;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = context.switchToHttp();

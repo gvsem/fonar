@@ -9,14 +9,23 @@
 {{> nav}}
 
 {{# if page.profile }}
-
   {{> profile/header}}
-
   {{> profile/repliques }}
+{{/if}}
 
+{{# if page.replique }}
+  {{> profile/header}}
+  {{> replique/replique }}
+{{/if}}
 
+{{# if page.replique_edit }}
+  {{> profile/header}}
+  {{> replique/replique }}
+{{/if}}
 
+{{# if page.settings }}
 
+  {{> settings/index}}
 
 {{/if}}
 
@@ -24,5 +33,26 @@
 </body>
 
 {{> js }}
+
+{{# if page.settings }}
+
+  <script type="module" src="/assets/js/settings.js"></script>
+
+{{/if}}
+
+{{# if page.replique }}
+
+  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
+  <script type="module" src="/assets/js/replique.js"></script>
+
+{{/if}}
+
+{{# if page.replique_edit }}
+
+
+  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
+  <script type="module" src="/assets/js/replique.js"></script>
+
+{{/if}}
 
 </html>

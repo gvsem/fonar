@@ -20,7 +20,7 @@ import { AppService } from '../../app.service';
 @Injectable()
 export class AuthRequiredGuard implements CanActivate {
   @Inject(UserService)
-  private userService: UserService;
+  protected userService: UserService;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = context.switchToHttp();
@@ -34,6 +34,7 @@ export class AuthRequiredGuard implements CanActivate {
         request.session.getUserId(),
       );
     } catch (e: any) {
+      console.log(e);
       try {
         await refreshSession(ctx.getRequest(), resp);
       } catch (ee: any) {

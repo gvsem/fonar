@@ -1,0 +1,52 @@
+<div class="container">
+
+
+  <div class="tile is-ancestor">
+
+    <div class="tile is-vertical is-4">
+
+      <div class="tile is-parent">
+
+        <nav class="panel" style="width: 100%">
+          <p class="panel-heading">
+            Настройки
+          </p>
+
+          <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-user" aria-hidden="true"></i>
+    </span>
+            Мой профиль
+          </a>
+
+        </nav>
+
+
+      </div>
+
+
+    </div>
+
+
+    <div class="tile is-vertical">
+
+      <div class="tile is-parent">
+
+
+        <div class="tile is-parent">
+
+          {{# if page.tab.profile }}
+            `
+            {{> settings/profile.tab}}
+
+
+
+          {{/if}}
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+

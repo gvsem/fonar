@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -20,17 +21,17 @@ import {
 
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { HttpExceptionFilter } from '../http.exception.filter';
 import { RepliqueService } from '../replique/replique.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { AppSession } from '../auth/session.decorator';
 import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('user')
-@Controller('user')
+@Controller('/api/user')
+@UseGuards(AuthRequiredGuard)
 @UseInterceptors(ClassSerializerInterceptor)
-@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -51,8 +52,8 @@ export class UserController {
     description: 'No user was found by the provided id.',
   })
   @Get(':login')
-  async getUser(userId = 1, @Param('login') login) {
-    return await this.userService.getUser(userId, login);
+  async getUser(@AppSession() app, @Param('login') login) {
+    return await this.userService.getUser(app.session.user.id, login);
   }
 
   @ApiOperation({
@@ -72,13 +73,8 @@ export class UserController {
     description: 'Not authorized.',
   })
   @Put('/')
-  @UseGuards(AuthGuard)
-  async updateUser(
-    @AppSession() session: SessionContainer,
-    userId = 1,
-    @Body() dto: UpdateUserDto,
-  ) {
-    return await this.userService.updateUser(userId, dto);
+  async updateUser(@AppSession() app, @Body() dto: UpdateUserDto) {
+    return await this.userService.updateUser(app.session.user.id, dto);
   }
 
   @ApiOperation({

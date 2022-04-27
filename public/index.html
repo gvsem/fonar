@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hello Bulma!</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/node_modules/bulma/css/bulma.css">
 </head>
 <body>
 
@@ -121,13 +122,65 @@
         </div>
       </div>
       <div class="tile is-parent">
-        <article class="tile is-child notification is-danger">
-          <p class="title">Wide tile</p>
-          <p class="subtitle">Aligned with the right tile</p>
-          <div class="content">
-            <!-- Content -->
-          </div>
+
+
+        <article class="tile is-child notification is-primary">
+          <p class="title">Vertical...</p>
+          <p class="subtitle">Top tile</p>
         </article>
+
+        <nav class="panel">
+          <p class="panel-heading">
+            Профиль
+          </p>
+
+          <a class="panel-block is-active">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            bulma
+          </a>
+          <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            marksheet
+          </a>
+          <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            minireset.css
+          </a>
+          <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            jgthms.github.io
+          </a>
+          <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-code-branch" aria-hidden="true"></i>
+    </span>
+            daniellowtw/infboard
+          </a>
+          <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-code-branch" aria-hidden="true"></i>
+    </span>
+            mojs
+          </a>
+          <label class="panel-block">
+            <input type="checkbox">
+            remember me
+          </label>
+          <div class="panel-block">
+            <button class="button is-link is-outlined is-fullwidth">
+              Reset all filters
+            </button>
+          </div>
+        </nav>
+
       </div>
     </div>
     <div class="tile is-parent">
@@ -179,6 +232,6 @@
 
 </body>
 
-<script type="module" src="assets/js/main.js"></script>
+<script type="module" src="/assets/js/main.js"></script>
 
 </html>
