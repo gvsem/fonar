@@ -17,4 +17,3 @@
 ![](docs/model.png)
 
 [Heroku](https://georgii-weblab1.herokuapp.com/)
-

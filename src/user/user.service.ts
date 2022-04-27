@@ -18,6 +18,30 @@ export class UserService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
 
+  async getUserByAuthId(authId: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { foreignAuthId: authId },
+    });
+    if (user === undefined) {
+      throw new NotFoundException(
+        'User with authId "' + authId + '" not found.',
+      );
+    }
+    return user;
+  }
+
+  async getUserByURL(pageURL: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { pageURL: pageURL },
+    });
+    if (user === undefined) {
+      throw new NotFoundException(
+        'User with pageURL "' + pageURL + '" not found.',
+      );
+    }
+    return user;
+  }
+
   async getUser(userId: number, username?: string): Promise<User> {
     if (username === undefined) {
       const user = await this.userRepository.findOne({ where: { id: userId } });
@@ -38,6 +62,16 @@ export class UserService {
     }
   }
 
+  async checkEmail(email: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { email: email } });
+    return user === undefined;
+  }
+
+  async checkLogin(login: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { login: login } });
+    return user === undefined;
+  }
+
   async updateUser(userId: number, userDto: UpdateUserDto): Promise<User> {
     const user = await this.getUser(userId);
     if (userDto.firstName !== undefined) {
@@ -52,10 +86,16 @@ export class UserService {
     if (userDto.isPrivate !== undefined) {
       user.isPrivate = userDto.isPrivate;
     }
+    if (userDto.bio !== undefined) {
+      user.bio = userDto.bio;
+    }
     return await this.userRepository.save(user);
   }
 
-  async createUser(userDto: CreateUserDto): Promise<User> {
+  async createUser(
+    userDto: CreateUserDto,
+    foreignAuthId?: string,
+  ): Promise<User> {
     const existingUser = await this.userRepository
       .createQueryBuilder('CheckingLoginEmailDuplicates')
       .where('"login" = :login', { login: userDto.login })
@@ -85,6 +125,7 @@ export class UserService {
       login: userDto.login,
       pageURL: userDto.login,
       password: userDto.password,
+      foreignAuthId: foreignAuthId ?? null,
     };
 
     return await this.userRepository.save(user);

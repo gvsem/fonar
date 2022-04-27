@@ -1,12 +1,11 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsNumber, IsPositive, IsString, Length } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsPositive, IsString, Length } from 'class-validator';
 
 export class CreateReponseDto {
-
   @ApiProperty({
     description: 'Id of Replique to which the Reponse will be attached',
     title: 'Replique Id',
-    example: 1
+    example: 1,
   })
   @IsNumber()
   @IsPositive()
@@ -22,5 +21,4 @@ export class CreateReponseDto {
   @IsString()
   @Length(0, 2000)
   public text: string;
-
 }

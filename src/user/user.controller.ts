@@ -3,17 +3,16 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
-  Post,
-  Put, Query,
+  Put,
   UseFilters,
-  UseInterceptors
-} from "@nestjs/common";
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -21,16 +20,18 @@ import {
 } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { HttpExceptionFilter } from '../http.exception.filter';
 import { RepliqueService } from '../replique/replique.service';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { AppSession } from '../auth/session.decorator';
+import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('user')
-@Controller('user')
+@Controller('/api/user')
+@UseGuards(AuthRequiredGuard)
 @UseInterceptors(ClassSerializerInterceptor)
-@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -51,35 +52,8 @@ export class UserController {
     description: 'No user was found by the provided id.',
   })
   @Get(':login')
-  async getUser(userId = 1, @Param('login') login) {
-    try {
-      const replique = await this.userService.getUser(userId, login);
-      return replique;
-    } catch (e: any) {
-      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
-    }
-  }
-
-  @ApiOperation({
-    summary: 'Create user',
-  })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({
-    status: 201,
-    description:
-      'User has been successfully created and presented within a response.',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'User has not been created.',
-  })
-  @Post('/')
-  async createUser(@Body() dto: CreateUserDto) {
-    try {
-      return await this.userService.createUser(dto);
-    } catch (e: any) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-    }
+  async getUser(@AppSession() app, @Param('login') login) {
+    return await this.userService.getUser(app.session.user.id, login);
   }
 
   @ApiOperation({
@@ -99,12 +73,8 @@ export class UserController {
     description: 'Not authorized.',
   })
   @Put('/')
-  async updateUser(userId = 1, @Body() dto: UpdateUserDto) {
-    try {
-      return await this.userService.updateUser(userId, dto);
-    } catch (e: any) {
-      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-    }
+  async updateUser(@AppSession() app, @Body() dto: UpdateUserDto) {
+    return await this.userService.updateUser(app.session.user.id, dto);
   }
 
   @ApiOperation({
@@ -126,8 +96,8 @@ export class UserController {
   async getRepliques(
     userId = 1,
     @Param('login') login: string,
-    @Query('skip') skip?: number,
-    @Query('quantity') quantity?: number,
+    @Param('skip') skip?: number,
+    @Param('quantity') quantity?: number,
   ) {
     if (skip === undefined) {
       skip = 0;

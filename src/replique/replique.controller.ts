@@ -4,32 +4,34 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
   Res,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 
 import { RepliqueService } from './replique.service';
 import { CreateRepliqueDto } from './dto/create.replique.dto';
 import { UpdateRepliqueDto } from './dto/update.replique.dto';
-import { HttpExceptionFilter } from 'src/http.exception.filter';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
+import { AppSession } from '../auth/session.decorator';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
+@UseGuards(AuthRequiredGuard)
 @ApiTags('replique')
-@Controller('replique')
-@UseFilters(new HttpExceptionFilter())
+@Controller('/api/replique')
 export class RepliqueController {
   constructor(private readonly repliqueService: RepliqueService) {}
 
@@ -47,10 +49,9 @@ export class RepliqueController {
     description: 'No replique was found by the provided id.',
   })
   @Get(':id')
-  async getReplique(userId = 1, @Param('id') id: number) {
-    return await this.repliqueService.getReplique(userId, id);
+  async getReplique(@AppSession() app, @Param('id') id: number) {
+    return await this.repliqueService.getReplique(app.session.user.id, id);
   }
-
 
   @ApiOperation({
     summary: 'Create replique',
@@ -67,11 +68,14 @@ export class RepliqueController {
   })
   @Post('/')
   async createReplique(
-    userId = 1,
+    @AppSession() app,
     @Body() dto: CreateRepliqueDto,
     @Res() response,
   ) {
-    const replique = await this.repliqueService.createReplique(userId, dto);
+    const replique = await this.repliqueService.createReplique(
+      app.session.user.id,
+      dto,
+    );
     response.status(201).send(replique);
     return replique;
   }
@@ -94,13 +98,17 @@ export class RepliqueController {
     description: 'Replique has not been found.',
   })
   @Put(':id')
+  @HttpCode(204)
   async updateReplique(
-    userId = 1,
+    @AppSession() app,
     @Param('id') id: number,
     @Body() dto: UpdateRepliqueDto,
   ) {
-    const replique = await this.repliqueService.updateReplique(userId, id, dto);
-    return replique;
+    return await this.repliqueService.updateReplique(
+      app.session.user.id,
+      id,
+      dto,
+    );
   }
 
   @ApiOperation({
@@ -128,12 +136,16 @@ export class RepliqueController {
   @Post(':id/originates/:oid')
   @HttpCode(204)
   async originateReplique(
-    userId = 1,
+    @AppSession() app,
     @Param('id') id,
     @Param('oid') originId,
     @Res() response,
   ) {
-    await this.repliqueService.originateReplique(userId, id, originId);
+    await this.repliqueService.originateReplique(
+      app.session.user.id,
+      id,
+      originId,
+    );
     response.status(204).send(null);
   }
 
@@ -161,12 +173,16 @@ export class RepliqueController {
   @Delete(':id/originates/:oid')
   @HttpCode(204)
   async deleteOriginationReplique(
-    userId = 1,
+    @AppSession() app,
     @Param('id') id,
     @Param('oid') originId,
     @Res() response,
   ) {
-    await this.repliqueService.removeOriginatingReplique(userId, id, originId);
+    await this.repliqueService.removeOriginatingReplique(
+      app.session.user.id,
+      id,
+      originId,
+    );
     response.status(204).send(null);
   }
 }
