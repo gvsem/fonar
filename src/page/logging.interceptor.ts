@@ -1,7 +1,11 @@
-
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface Response<T> {
   data: T;
@@ -9,17 +13,17 @@ export interface Response<T> {
 
 @Injectable()
 export class LoggingInterceptor<T> implements NestInterceptor<T, Response<T>> {
-
-  intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<Response<T>> {
     const now = Date.now();
 
     return next.handle().pipe(
-      map(response => {
+      map((response) => {
         response.loadingtime = Date.now() - now;
         return response;
       }),
     );
-
   }
-
 }

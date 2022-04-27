@@ -1,16 +1,16 @@
 import { join } from 'path';
 
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { UserModule } from './user/user.module';
+import { User, UserModule } from './user/user.module';
 import { PageModule } from './page/page.module';
 import { RepliqueModule } from './replique/replique.module';
 import { ReponseModule } from './reponse/reponse.module';
-
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,13 +20,25 @@ import { ReponseModule } from './reponse/reponse.module';
         rejectUnauthorized: false,
       },
       entities: [join(__dirname, '**', 'entities', '*.entity.{ts,js}')],
-      synchronize: true, // This for development
+      synchronize: true,
       autoLoadEntities: true,
+    }),
+    AuthModule.forRoot({
+      // These are the connection details of the app you created on supertokens.com
+      connectionURI: process.env?.AuthURI,
+      apiKey: process.env?.AuthToken,
+      appInfo: {
+        // Learn more about this on https://supertokens.com/docs/thirdpartyemailpassword/appinfo
+        appName: 'Fonar',
+        apiDomain: process.env?.ApiDomain,
+        websiteDomain: process.env?.ApiDomain,
+      },
     }),
     PageModule,
     UserModule,
     RepliqueModule,
     ReponseModule,
+    forwardRef(() => TypeOrmModule.forFeature([User])),
   ],
   controllers: [AppController],
   providers: [AppService],

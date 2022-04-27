@@ -1,0 +1,15 @@
+
+ <section class="hero is-link">
+   <div class="hero-body">
+     <p class="title">
+       {{user.firstName}} {{user.lastName}}
+       <span class="tag is-primary is-light">aka {{user.authorAlias}}</span>
+     </p>
+     {{# if user.bio }}
+       <p class="subtitle">
+         {{user.bio}}
+       </p>
+     {{/if}}
+
+   </div>
+ </section>

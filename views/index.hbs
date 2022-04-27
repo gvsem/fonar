@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    {{> meta}}
-    {{> css}}
+  {{> meta}}
+  {{> css}}
 </head>
 <body>
 
-    {{> nav}}
-    {{> sidebar}}
+{{> nav}}
 
-    <main>
+{{# if page.profile }}
+  {{> profile/header}}
+  {{> profile/repliques }}
+{{/if}}
 
-        <article>
-                {{ page.content }}
-        </article>
+{{# if page.replique }}
+  {{> profile/header}}
+  {{> replique/replique }}
+{{/if}}
 
-    </main>
+{{# if page.replique_edit }}
+  {{> profile/header}}
+  {{> replique/replique }}
+{{/if}}
 
-    {{> footer}}
+{{# if page.settings }}
+
+  {{> settings/index}}
+
+{{/if}}
+
 
 </body>
 
-    {{> js }}
+{{> js }}
+
+{{# if page.settings }}
+
+  <script type="module" src="/assets/js/settings.js"></script>
+
+{{/if}}
+
+{{# if page.replique }}
+
+  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
+  <script type="module" src="/assets/js/replique.js"></script>
+
+{{/if}}
+
+{{# if page.replique_edit }}
+
+
+  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
+  <script type="module" src="/assets/js/replique.js"></script>
+
+{{/if}}
 
 </html>

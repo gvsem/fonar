@@ -1,0 +1,120 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css?family=Inter:100,200,300,400,500,600,700,800,900');
+
+// Set your brand colors
+$logo-background: #364968;
+$logo-text: #FDDF97;
+
+$pink: #FA7C21;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
+
+//012
+
+// Update Bulma's global variables
+//$family-sans-serif: "Inter", sans-serif;
+$title-family: "Inter", sans-serif;
+$family-primary: "Inter", sans-serif;
+
+//$grey-dark: $brown;
+//$grey-light: $beige-light;
+
+$primary: $logo-text;
+
+$link: $logo-background;
+$primary: $logo-text;
+
+//$link-text: $logo-text;
+
+//.is-link {
+//  color: $logo-text;
+//}
+$button-color: $logo-text;
+
+//: $logo-text;
+
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+
+// Update some of Bulma's component variables
+//$body-background-color: $beige-lighter;
+//$control-border-width: 2px;
+//$input-border-color: transparent;
+//$input-shadow: none;
+
+// Import only what you need from Bulma
+
+// Navigation
+$navbar-background-color: $logo-background;
+
+$navbar-burger-color: $logo-text;
+$navbar-divider-background-color: $logo-text;
+
+$navbar-box-shadow-color: $logo-text;
+
+$navbar-item-color: $logo-text;
+$navbar-item-hover-color: $logo-text;
+$navbar-item-hover-background-color: $logo-background;
+
+$navbar-dropdown-background-color: $logo-background;
+$navbar-dropdown-arrow: $logo-text;
+$navbar-dropdown-item-hover-color: $logo-background;
+$navbar-dropdown-item-hover-background-color: $logo-text;
+
+
+
+@charset "utf-8";
+@import "../../node_modules/bulma/bulma.sass";
+
+//@import "../../node_modules/bulma/bulma";
+//@import "../../node_modules/bulma/sass/utilities/all";
+//@import "../../node_modules/bulma/sass/base/all";
+//@import "../../node_modules/bulma/sass/elements/button";
+//@import "../../node_modules/bulma/sass/elements/container";
+//@import "../../node_modules/bulma/sass/elements/title";
+//@import "../../node_modules/bulma/sass/form/all";
+//@import "../../node_modules/bulma/sass/components/navbar";
+//@import "../../node_modules/bulma/sass/layout/hero";
+//@import "../../node_modules/bulma/sass/layout/section";
+
+
+#app-nav .navbar-brand .navbar-item, .logo-text {
+  font-size: 26pt;
+  font-weight: 900;
+  padding-top: 0;
+  font-family: $title-family;
+  color: $logo-text;
+}
+
+#app-nav .navbar-brand .navbar-burger {
+  height: auto;
+}
+
+#app-nav-bar .navbar-item {
+  font-size: 12pt;
+  font-weight: 500;
+}
+
+#app-nav .button {
+  color: #4a4a4a;
+}
+
+.is-success-animated{
+  @extend .is-success;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+.is-danger-animated{
+  @extend .is-danger;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+

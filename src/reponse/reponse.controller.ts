@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  UseFilters,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -10,10 +22,12 @@ import {
 
 import { ReponseService } from './reponse.service';
 import { CreateReponseDto } from './dto/create.reponse.dto';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('reponse')
-@Controller('reponse')
+@Controller('/api/reponse')
+@UseGuards(AuthRequiredGuard)
 export class ReponseController {
   constructor(private readonly reponseService: ReponseService) {}
 
@@ -32,7 +46,11 @@ export class ReponseController {
   })
   @Get(':id')
   async getReponse(userId = 1, @Param('id') id) {
-    return this.reponseService.getReponse(userId, id);
+    try {
+      return await this.reponseService.getReponse(userId, id);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+    }
   }
 
   @ApiOperation({
@@ -49,7 +67,11 @@ export class ReponseController {
     description: 'Reponse has not been created.',
   })
   @Post('/')
-  createReponse(userId = 1, @Body() dto: CreateReponseDto) {
-    return this.reponseService.createReponse(userId, dto);
+  async createReponse(userId = 1, @Body() dto: CreateReponseDto) {
+    try {
+      return await this.reponseService.createReponse(userId, dto);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
