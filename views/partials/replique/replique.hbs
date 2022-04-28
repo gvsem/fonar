@@ -1,0 +1,70 @@
+<div class="container" style="margin-top: 15px;">
+
+
+  <div class="card">
+
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="title is-5" style="margin: auto;">
+            <a href="{{replique.getRepliqueURL}}">{{replique.title}}</a>
+
+            {{# if replique.isPublished }}
+            {{else}}
+              <span class="tag is-link is-6">набросок</span>
+              <!-- <span class="icon"><i class="fas fa-pencil-ruler"></i></span> -->
+            {{/if}}
+
+            {{#if replique.my }}
+              <a class="button is-primary is-small" href="/u/{{replique.creator.pageURL}}/{{replique.id}}/edit">Редактировать</a>
+            {{/if}}
+
+          </p>
+          <a class="subtitle is-6" href="/u/{{replique.creator.pageURL}}">
+            <span class="icon"><i class="fas fa-user"></i></span>
+            {{replique.creator.authorAlias}}
+          </a>
+        </div>
+      </div>
+
+      <div class="content">
+        {{# if replique.abstractText }}
+          {{ replique.abstractText }}
+          <hr>
+        {{else}}
+        {{/if}}
+        <br/><br/>
+
+
+
+        {{# if page.replique }}
+
+          <div class="replique-content is-hidden" replique-id="{{ replique.id }}" style="border-width: 1px;">{{{replique.content}}}</div>
+
+        {{/if}}
+
+        {{# if page.replique_edit }}
+          <div id="editorjs" replique-id="{{ replique.id }}" style="border-width: 1px;"></div>
+
+          <div class="buttons">
+            <button class="button is-primary" id="replique-save">Сохранить реплику</button>
+          {{# if replique.isPublished }}
+
+          {{else}}
+            <button class="button is-link" id="replique-publish">Опубликовать</button>
+          {{/if}}
+            <a class="button is-success" href="/u/{{replique.creator.pageURL}}/{{replique.id}}">Назад</a>
+          </div>
+
+        {{/if}}
+
+
+        <br>
+        <time datetime="2016-1-1" timestamp="{{ replique.publicationDate }}"></time>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+

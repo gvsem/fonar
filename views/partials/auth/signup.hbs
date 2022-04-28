@@ -1,0 +1,179 @@
+<div class="columns" style="padding: 10px;">
+  <div class="column is-7">
+
+
+    <!--    <div class="card">-->
+
+    <!--      <div class="card-content">-->
+
+    <div class="container">
+
+      <section class="hero is-link">
+        <div class="hero-body">
+          <p class="title">
+            Ночь. Улица.
+            <text class="logo-text">Фонарь</text>.
+          </p>
+          <p class="subtitle">
+            В сердечной простоте беседуйте о главном.
+          </p>
+
+        </div>
+      </section>
+
+      <div class="container has-background-link" style="padding: 3rem; padding-top: 0px; padding-bottom: 1rem;">
+
+        <div class="columns">
+          <div class="column">
+
+            <div class="box">
+              <p class="title is-5"><span class="icon"><i class="fas fa-globe-snow"></i></span> Реплики</p>
+              <p class="subtitle is-6">Публикуйте высказывания, размышления и заметки в своем альманахе</p>
+            </div>
+
+            <div class="box">
+              <p class="title is-5"><span class="icon"><i class="fas fa-yin-yang"></i></span> Субъективность</p>
+              <p class="subtitle is-6">Мы ценим стремление к мудрости и отказываемся от объективаций</p>
+            </div>
+
+            <div class="box">
+              <p class="title is-5"><span class="icon"><i class="fas fa-book-reader"></i></span> Погружение</p>
+              <p class="subtitle is-6">Читайте письменные выступления пассионарных современников</p>
+            </div>
+
+          </div>
+
+          <div class="column">
+
+            <div class="box">
+              <p class="title is-5"><span class="icon"><i class="fas fa-landmark"></i></span> Наследие</p>
+              <p class="subtitle is-6">Обращайтесь к лучшим текстам выдающихся мыслителей веков</p>
+            </div>
+
+            <div class="box">
+              <p class="title is-5"><span class="icon"><i class="fas fa-box-open"></i></span> Простор</p>
+              <p class="subtitle is-6">Цитируйте и используйте публикации свободно</p>
+            </div>
+
+            <div class="box">
+              <p class="title is-5"><span class="icon"><i class="fas fa-quote-left"></i></span> Отклики</p>
+              <p class="subtitle is-6">Оставляйте впечатления и отповеди на реплики единомышленников</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+  <div class="column">
+
+    <!--    <div class="card">-->
+    <!--      <div class="card-content">-->
+
+    <div class="box">
+
+      <div class="content">
+
+        <form id="signup-form" novalidate="novalidate">
+
+          <label class="label">Представьтесь, пожалуйста</label>
+          <div class="field is-horizontal">
+            <div class="field-body">
+              <div class="field">
+                <p class="control">
+                  <input class="input" name="firstname" type="text" placeholder="Ваше имя" blame="blame-names" required>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control">
+                  <input class="input" name="lastname" type="text" placeholder="Ваша фамилия" blame="blame-names"
+                         required>
+                </p>
+              </div>
+            </div>
+          </div>
+          <p id="blame-names" class="help is-danger is-hidden">Чтобы имя и фамилия выглядели красиво, используйте для
+            них от 2 до 20 символов.</p>
+
+          <div class="field is-horizontal" id="login-field">
+            <div class="field-body">
+              <div class="field is-expanded">
+                <div class="field has-addons">
+                  <p class="control">
+                    <a class="button is-static">
+                      fonar.spb.ru/
+                    </a>
+                  </p>
+                  <p class="control is-expanded">
+                    <input class="input" name="login" type="text" placeholder="Имечко на Фонаре" data-validation="login"
+                           required>
+                  </p>
+                </div>
+                <p id="blame-login-format" class="help is-danger is-hidden">Пожалуйста, выберите имечко от 5 до 16
+                  символов, состоящее только из латинских букв и цифр.</p>
+                <p id="blame-login-occupied" class="help is-danger is-hidden">Имечко уже занято. Попробуете другое?</p>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="field" id="email-field">
+            <label class="label">Поделитесь своими реквизитами</label>
+            <div class="control has-icons-left has-icons-right">
+              <input class="input" type="email" placeholder="Адрес для корреспонденции" data-validation="email"
+                     name="email" required>
+              <span class="icon is-small is-left">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+            <p id="blame-email-format" class="help is-danger is-hidden">Нам неизвестен такой электронный почтамт. Это
+              точно e-mail?</p>
+            <p id="blame-email-occupied" class="help is-danger is-hidden">Кажется, этот адрес уже используется. Хотите
+              <a class="button is-small is-light" href="/auth/signin">
+                войти
+              </a>?</p>
+          </div>
+
+          <div class="field">
+            <p class="control has-icons-left">
+              <input class="input" name="password" type="password" placeholder="Парольный автограф"
+                     blame="blame-password" required>
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </p>
+            <p id="blame-password" class="help is-danger is-hidden">Пожалуйста, выберите автограф от 6 до 30 символов,
+              хотя бы с одной цифрой и одной заглавной буквой.</p>
+
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <label class="checkbox">
+                <input name="agree" type="checkbox" required>
+                Я принимаю <a href="#">лицензионное соглашение</a>
+              </label>
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" type="submit" value="submit">Зарегистрироваться</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <!--      </div>-->
+    <!--    </div>-->
+
+  </div>
+</div>
