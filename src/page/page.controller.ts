@@ -87,6 +87,8 @@ export class PageController {
       10,
     );
 
+    //console.log(r.user.repliques.data[0].creator);
+
     return r;
   }
 

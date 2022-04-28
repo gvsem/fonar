@@ -76,7 +76,7 @@ export class RepliqueController {
       app.session.user.id,
       dto,
     );
-    response.status(201).send(replique);
+    response.status(201).send(await this.repliqueService.getReplique(app.session.user.id, replique.id));
     return replique;
   }
 
