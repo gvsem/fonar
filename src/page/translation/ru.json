@@ -7,10 +7,10 @@
     "sign_in": "Войти",
     "sign_up": "Присоединиться",
     "user_greeting": "Привет",
-    "sign_out": "Выйти",
+    "sign_out": "Выйти"
   },
   "signup": {
     "user_login": "future localization",
-    "user_email": "future localization",
+    "user_email": "future localization"
   }
 }

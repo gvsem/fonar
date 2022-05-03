@@ -28,7 +28,7 @@
                       {{/if}}
 
                     </p>
-                    <a class="subtitle is-6" href="{{replique.creator.getPageURL}}">
+                    <a class="subtitle is-6" href="/u/{{replique.creator.pageURL}}">
                       <span class="icon"><i class="fas fa-user"></i></span>
                       {{replique.creator.authorAlias}}
                     </a>
@@ -75,8 +75,8 @@
       <div class="column is-4">
         <article class="tile is-child notification is-link">
           <div class="content">
-            <p class="title">Новая реплика</p>
-            <p class="subtitle">Введите заголовок, чтобы создать набросок:</p>
+            <p class="title is-5">Новая реплика</p>
+            <p class="subtitle is-6">Введите заголовок, чтобы создать набросок:</p>
             <div class="content">
               <input id="create-replique" class="input is-normal" name="title" type="text"
                      placeholder="Название реплики"

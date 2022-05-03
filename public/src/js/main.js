@@ -21,11 +21,11 @@ $('#create-replique').keyup(function (e) {
         .done(function (response, textStatus, jqXHR) {
           console.log('done');
           element.addClass('is-success-animated');
-          window.location.replace(
+          window.location.href = (
             '/u/' +
-              response.replique.creator.pageURL +
+              response.creator.pageURL +
               '/' +
-              response.replique.id,
+              response.id + '/edit'
           );
         })
         .fail(function (jqXHR, textStatus, errorThrown) {

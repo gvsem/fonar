@@ -91,6 +91,8 @@ export class PageController {
 
     await this.bus.notifyVisitor(r.user.id, app.session.user.authorAlias);
 
+    //console.log(r.user.repliques.data[0].creator);
+
     return r;
   }
 

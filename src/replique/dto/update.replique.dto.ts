@@ -24,7 +24,7 @@ export class UpdateRepliqueDto {
   })
   @IsOptional()
   @IsString()
-  @Length(0, 2000)
+  @Length(0, 1000)
   public abstractText?: string;
 
   @ApiPropertyOptional({

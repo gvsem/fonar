@@ -10,11 +10,21 @@ var options = {
   authorAlias: RegExp.prototype.test.bind(/^[A-Za-z0-9]{0,30}$/),
 };
 
+var inputTimeoutFlag = false;
+
 form.find("input").on("input", async function(e) {
 
-  await new Promise(resolve => setTimeout(resolve, 300));
+  if (inputTimeoutFlag) {
+    return;
+  }
 
   var element = $(this);
+  element.removeClass("is-success-animated");
+
+  inputTimeoutFlag = true;
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  inputTimeoutFlag = false;
+
   var n = $(this).attr("name");
   var v = $(this).val();
 
@@ -26,7 +36,7 @@ form.find("input").on("input", async function(e) {
       data: { [n]: v }
     });
 
-    element.removeClass("is-success-animated");
+
     element.removeClass("is-danger-animated");
 
     request

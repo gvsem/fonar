@@ -36,8 +36,8 @@ if ($("#" + editorId).length > 0) {
       list: List,
       quote: Quote,
       code: CodeTool,
-      linkTool: LinkTool,
-      table: Table
+      // linkTool: LinkTool,
+      // table: Table
     },
 
     /**
@@ -148,21 +148,24 @@ if ($("#" + editorId).length > 0) {
     editor.save().then((outputData) => {
       console.log("Article data: ", outputData);
 
+      var abstractText = $('#abstractText').val();
+
+      var data = { abstractText: abstractText,
+          content: JSON.stringify(outputData),
+        };
+
       var request = $.ajax({
         url: "/api/replique/" + $("#" + editorId).attr("replique-id"),
         type: "put",
-        data: { content: JSON.stringify(outputData) }
+        data: data
       });
 
       request
         .done(function(response, textStatus, jqXHR) {
-          console.log("done");
+          window.location.href = '../' + $("#" + editorId).attr("replique-id");
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-          console.error(
-            "The following error occurred: " + textStatus,
-            errorThrown
-          );
+          $('#updateErrorNotification').removeClass('is-hidden');
         });
 
 
@@ -171,6 +174,44 @@ if ($("#" + editorId).length > 0) {
     });
 
   });
+
+
+  $("#replique-publish").click(async function(e) {
+
+      var request = $.ajax({
+        url: "/api/replique/" + $("#" + editorId).attr("replique-id") + '/publish',
+        type: "put"
+      });
+
+      request
+        .done(function(response, textStatus, jqXHR) {
+          window.location.href = '../' + $("#" + editorId).attr("replique-id");
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          $('#updateErrorNotification').text('Публикация не удалась.');
+          $('#updateErrorNotification').removeClass('is-hidden');
+        });
+
+  });
+
+  $("#replique-delete").click(async function(e) {
+
+    var request = $.ajax({
+      url: "/api/replique/" + $("#" + editorId).attr("replique-id"),
+      type: "delete"
+    });
+
+    request
+      .done(function(response, textStatus, jqXHR) {
+        window.location.href = '../';
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        $('#updateErrorNotification').text('Удалениен не удалось.');
+        $('#updateErrorNotification').removeClass('is-hidden');
+      });
+
+  });
+
 
 }
 

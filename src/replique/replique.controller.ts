@@ -76,7 +76,7 @@ export class RepliqueController {
       app.session.user.id,
       dto,
     );
-    response.status(201).send(replique);
+    response.status(201).send(await this.repliqueService.getReplique(app.session.user.id, replique.id));
     return replique;
   }
 
@@ -108,6 +108,62 @@ export class RepliqueController {
       app.session.user.id,
       id,
       dto,
+    );
+  }
+
+  @ApiOperation({
+    summary: 'Publish replique',
+  })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiResponse({
+    status: 204,
+    description: 'Replique has been successfully updated.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Replique has not been updated.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Replique has not been found.',
+  })
+  @Put(':id/publish')
+  @HttpCode(204)
+  async publishReplique(
+    @AppSession() app,
+    @Param('id') id: number,
+  ) {
+    return await this.repliqueService.publishReplique(
+      app.session.user.id,
+      id
+    );
+  }
+
+  @ApiOperation({
+    summary: 'Delete replique',
+  })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiResponse({
+    status: 204,
+    description: 'Replique has been successfully deleted.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Replique has not been removed.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Replique has not been found.',
+  })
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteReplique(
+    @AppSession() app,
+    @Param('id') id: number,
+  ) {
+    return await this.repliqueService.deleteReplique(
+      app.session.user.id,
+      id
     );
   }
 
