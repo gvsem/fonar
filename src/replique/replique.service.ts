@@ -1,9 +1,10 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards
+} from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -142,5 +143,21 @@ export class RepliqueService {
       data: result,
       count: total,
     };
+  }
+
+  async publishReplique(userId: number, repliqueId: number) {
+    const replique = await this.getReplique(userId, repliqueId);
+    if (replique.isPublished) {
+      throw new BadRequestException("Replique with id " + repliqueId + " is already published.");
+    }
+    replique.isPublished = true;
+    replique.publicationDate = new Date();
+    return await this.repliqueRepository.save(replique);
+  }
+
+  async deleteReplique(userId: number, repliqueId: number) {
+    const replique = await this.getReplique(userId, repliqueId);
+    replique.isActive = false;
+    return await this.repliqueRepository.save(replique);
   }
 }

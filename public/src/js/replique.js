@@ -175,5 +175,43 @@ if ($("#" + editorId).length > 0) {
 
   });
 
+
+  $("#replique-publish").click(async function(e) {
+
+      var request = $.ajax({
+        url: "/api/replique/" + $("#" + editorId).attr("replique-id") + '/publish',
+        type: "put"
+      });
+
+      request
+        .done(function(response, textStatus, jqXHR) {
+          window.location.href = '../' + $("#" + editorId).attr("replique-id");
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          $('#updateErrorNotification').text('Публикация не удалась.');
+          $('#updateErrorNotification').removeClass('is-hidden');
+        });
+
+  });
+
+  $("#replique-delete").click(async function(e) {
+
+    var request = $.ajax({
+      url: "/api/replique/" + $("#" + editorId).attr("replique-id"),
+      type: "delete"
+    });
+
+    request
+      .done(function(response, textStatus, jqXHR) {
+        window.location.href = '../';
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        $('#updateErrorNotification').text('Удалениен не удалось.');
+        $('#updateErrorNotification').removeClass('is-hidden');
+      });
+
+  });
+
+
 }
 
