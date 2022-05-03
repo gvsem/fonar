@@ -36,8 +36,8 @@ if ($("#" + editorId).length > 0) {
       list: List,
       quote: Quote,
       code: CodeTool,
-      linkTool: LinkTool,
-      table: Table
+      // linkTool: LinkTool,
+      // table: Table
     },
 
     /**
@@ -148,21 +148,24 @@ if ($("#" + editorId).length > 0) {
     editor.save().then((outputData) => {
       console.log("Article data: ", outputData);
 
+      var abstractText = $('#abstractText').val();
+
+      var data = { abstractText: abstractText,
+          content: JSON.stringify(outputData),
+        };
+
       var request = $.ajax({
         url: "/api/replique/" + $("#" + editorId).attr("replique-id"),
         type: "put",
-        data: { content: JSON.stringify(outputData) }
+        data: data
       });
 
       request
         .done(function(response, textStatus, jqXHR) {
-          console.log("done");
+          window.location.href = '../' + $("#" + editorId).attr("replique-id");
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-          console.error(
-            "The following error occurred: " + textStatus,
-            errorThrown
-          );
+          $('#updateErrorNotification').removeClass('is-hidden');
         });
 
 

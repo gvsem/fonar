@@ -67,6 +67,7 @@ export class RepliqueService {
     if (repliqueDto.abstractText) {
       replique.abstractText = repliqueDto.abstractText;
     }
+    console.log(repliqueDto);
 
     return await this.repliqueRepository.save(replique);
   }

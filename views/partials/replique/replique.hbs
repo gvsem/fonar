@@ -28,23 +28,31 @@
       </div>
 
       <div class="content">
-        {{# if replique.abstractText }}
-          {{ replique.abstractText }}
-          <hr>
-        {{else}}
-        {{/if}}
-        <br/><br/>
-
-
 
         {{# if page.replique }}
+
+          {{# if replique.abstractText }}
+            <p>{{ replique.abstractText }}</p>
+            <hr>
+          {{else}}
+          {{/if}}
+          <br/><br/>
 
           <div class="replique-content is-hidden" replique-id="{{ replique.id }}" style="border-width: 1px;">{{{replique.content}}}</div>
 
         {{/if}}
 
         {{# if page.replique_edit }}
+
+          <textarea id="abstractText" class="textarea" placeholder="Преамбула к реплике" rows="10" maxlength="1000">{{ replique.abstractText }}</textarea>
+
           <div id="editorjs" replique-id="{{ replique.id }}" style="border-width: 1px;"></div>
+
+
+          <div class="notification is-danger is-hidden" id="updateErrorNotification">
+            <strong>Ошибка сохранения реплики</strong><br>
+            Убедитесь, что текст преамбулы не более 1000 символов. Иначе мы бессильны.
+          </div>
 
           <div class="buttons">
             <button class="button is-primary" id="replique-save">Сохранить реплику</button>
