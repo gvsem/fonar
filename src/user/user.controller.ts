@@ -5,12 +5,10 @@ import {
   Get,
   Param,
   Put,
-  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiCookieAuth,
   ApiOperation,
@@ -22,9 +20,7 @@ import {
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { RepliqueService } from '../replique/replique.service';
-import { AuthGuard } from '../auth/guards/auth.guard';
 import { AppSession } from '../auth/session.decorator';
-import { SessionContainer } from 'supertokens-node/lib/build/recipe/session/faunadb';
 import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
 @ApiCookieAuth()

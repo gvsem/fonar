@@ -25,14 +25,16 @@
     "bulma-validator": "^3.3.1",
     "editorjs-html": "^3.4.2",
     "jquery": "^3.6.0",
+    "js-cookie": "^3.0.1",
     "js-sha512": "^0.8.0",
+    "node-sass": "^7.0.1",
     "react": "^18.0.0",
+    "socket.io-client": "^4.5.0",
     "supertokens-auth-react": "^0.20.4",
     "supertokens-website": "^10.0.10",
+    "toastr": "^2.1.4",
     "webpack": "^5.72.0",
-    "webpack-cli": "^4.9.2",
-    "node-sass": "^7.0.1"
-    "toastr": "^2.1.4"
+    "webpack-cli": "^4.9.2"
   },
   "devDependencies": {
     "webpack": "^5.72.0",

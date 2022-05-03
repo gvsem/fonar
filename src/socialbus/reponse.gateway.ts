@@ -1,46 +1,36 @@
 import {
-  MessageBody,
-  OnGatewayConnection, OnGatewayDisconnect,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   OnGatewayInit,
-  SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer
-} from "@nestjs/websockets";
+  WebSocketServer,
+} from '@nestjs/websockets';
 
 import { Socket, Server } from 'socket.io';
-import { Inject, Logger, UseGuards } from "@nestjs/common";
-import { SocialbusGuard } from "./guards/socialbus.guard";
-import { getSessionInformation } from "supertokens-node/lib/build/recipe/session";
-import { UserService } from "../user/user.service";
-import { User } from "../user/user.entity";
+import { Inject, Logger, UseGuards } from '@nestjs/common';
+import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
+import { Replique } from '../replique/replique.entity';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
+  transports: ['polling'],
 })
-
+//@UseGuards(AuthRequiredGuard)
 export class SocialBusGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
-  @Inject(UserService) userService: UserService;
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer() server: Server;
 
-  connections : { [key:string]: Socket; } = {};
-
+  connections: { [key: string]: Socket } = {};
 
   private logger: Logger = new Logger('AppGateway');
 
-  // @UseGuards(SocialbusGuard)
-  // @SubscribeMessage('notifyNewVisitor')
-  // handleMessage(client: Socket, payload: string): void {
-  //   this.server.emit('notifyComment', payload);
-  //
-  // }
-
-  notifyVisitor(userId: number, user: User) {
-    if (this.connections[userId] !== undefined) {
-      this.connections[userId].send('notifyNewVisitor', user.authorAlias);
+  async notifyAboutNewReplique(r: Replique) {
+    for (const rKey in this.connections) {
+      this.logger.log('gonna notify: ' + rKey + ' about replique ' + r.id);
+      this.connections[rKey].emit('notifyAboutNewReplique', r);
     }
   }
 
@@ -50,22 +40,12 @@ export class SocialBusGateway
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
-
-    const token = client.handshake.headers.authorization.split(" ")[1];
-    const s = await getSessionInformation(token);
-    const u = await this.userService.getUserByAuthId(s.userId);
-
-    delete this.connections[u.id];
+    delete this.connections[client.id];
   }
 
+  @UseGuards(AuthRequiredGuard)
   async handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
-
-    const token = client.handshake.headers.authorization.split(" ")[1];
-    const s = await getSessionInformation(token);
-    const u = await this.userService.getUserByAuthId(s.userId);
-
-    this.connections[u.id] = client;
-
+    this.connections[client.id] = client;
   }
 }

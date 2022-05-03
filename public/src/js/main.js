@@ -1,7 +1,7 @@
 import Bulma from '@vizuaalog/bulmajs';
 import $ from 'jquery';
 
-$('#create-replique').keyup(function (e) {
+$('#create-replique').on('keyup', function (e) {
   if (e.keyCode == 13) {
     var element = $(this);
     var n = $(this).attr('name');

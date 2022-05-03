@@ -23,8 +23,8 @@ export class AuthRequiredGuard implements CanActivate {
   protected userService: UserService;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const ctx = context.switchToHttp();
 
+    const ctx = context.switchToHttp();
     const request = ctx.getRequest();
     const resp = ctx.getResponse();
 

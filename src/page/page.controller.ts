@@ -20,7 +20,6 @@ import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { PageExceptionFilter } from './page.exception.filter';
 import { UserOwnsRepliqueGuard } from '../replique/guards/owns.replique.guard';
-import { SocialBusGateway } from "../socialbus/reponse.gateway";
 
 @ApiTags('frontend')
 @Controller()
@@ -31,7 +30,6 @@ export class PageController {
     private readonly pageService: PageService,
     private readonly repliqueService: RepliqueService,
     private readonly userService: UserService,
-    private readonly bus: SocialBusGateway
   ) {}
 
   @Get('/')
@@ -89,10 +87,6 @@ export class PageController {
       10,
     );
 
-    await this.bus.notifyVisitor(r.user.id, app.session.user.authorAlias);
-
-    //console.log(r.user.repliques.data[0].creator);
-
     return r;
   }
 
@@ -118,9 +112,7 @@ export class PageController {
     );
     r.replique.my =
       app.session.authorized && app.session.user.id == r.replique.creator.id;
-    //r.replique.htmlContent = r.replique.htmlContent();
 
-    console.log(r.replique);
     return r;
   }
 
@@ -154,7 +146,6 @@ export class PageController {
       );
     }
 
-    console.log(r.replique);
     return r;
   }
 

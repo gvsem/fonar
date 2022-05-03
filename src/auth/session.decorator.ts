@@ -8,9 +8,14 @@ export const AppSession = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
 
-    const tr = TranslationService.getFromHeaders(
-      request.headers['accept-languages']?.toString(),
-    );
+    let tr;
+    try {
+      tr = TranslationService.getFromHeaders(
+        request.headers['accept-languages']?.toString(),
+      );
+    } catch (e: any) {
+      tr = TranslationService.get('ru');
+    }
     return {
       tr: tr,
       app: AppService.getAppConfiguration(),

@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: { auth : './src/js/auth.js', settings: './src/js/settings.js', replique: './src/js/replique.js', main: './src/js/socialbus.js', socialbus: './src/js/socialbus.js' },
+  entry: { auth : './src/js/auth.js', settings: './src/js/settings.js', replique: './src/js/replique.js', main: './src/js/main.js', socialbus: './src/js/socialbus.js' },
   devtool: 'source-map',
   output: {
     filename: '[name].js',

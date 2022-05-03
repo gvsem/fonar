@@ -13,6 +13,7 @@ import { CreateRepliqueDto } from './dto/create.replique.dto';
 import { UpdateRepliqueDto } from './dto/update.replique.dto';
 import { UserService } from '../user/user.service';
 import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
+import { SocialBusGateway } from "../socialbus/reponse.gateway";
 
 @Injectable()
 export class RepliqueService {
@@ -21,6 +22,9 @@ export class RepliqueService {
 
   @Inject(UserService)
   private userService: UserService;
+
+  @Inject(SocialBusGateway)
+  private bus: SocialBusGateway;
 
   async getReplique(userId: number, repliqueId: number): Promise<Replique> {
     const r = await this.repliqueRepository.findOne({
@@ -68,7 +72,6 @@ export class RepliqueService {
     if (repliqueDto.abstractText) {
       replique.abstractText = repliqueDto.abstractText;
     }
-    console.log(repliqueDto);
 
     return await this.repliqueRepository.save(replique);
   }
@@ -152,7 +155,9 @@ export class RepliqueService {
     }
     replique.isPublished = true;
     replique.publicationDate = new Date();
-    return await this.repliqueRepository.save(replique);
+    const r = await this.repliqueRepository.save(replique);
+    await this.bus.notifyAboutNewReplique(r);
+    return r;
   }
 
   async deleteReplique(userId: number, repliqueId: number) {

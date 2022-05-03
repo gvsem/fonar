@@ -8,12 +8,14 @@ import { ReponseModule, Reponse } from '../reponse/reponse.module';
 import { Replique } from './replique.entity';
 import { RepliqueController } from './replique.controller';
 import { RepliqueService } from './replique.service';
+import { SocialbusModule } from "../socialbus/socialbus.module";
 
 @Module({
   imports: [
     forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User])),
     forwardRef(() => ReponseModule),
     forwardRef(() => UserModule),
+    forwardRef(() => SocialbusModule),
   ],
   controllers: [RepliqueController],
   providers: [RepliqueService, Replique],

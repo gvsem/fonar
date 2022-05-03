@@ -1,34 +1,41 @@
+import io from 'socket.io-client';
+import toastr from 'toastr';
 
-function getCookie(name) {
-  try {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  } catch (e) {
-    return '';
-  }
-}
+// toastr.options = {
+//   debug: false,
+//   positionClass: 'toast-bottom-right',
+//   onclick: null,
+//   fadeIn: 300,
+//   fadeOut: 1000,
+//   timeOut: 10000,
+//   extendedTimeOut: 1000,
+// };
 
-var socketOptions = {
-  transportOptions: {
-    polling: {
-      extraHeaders: {
-        Authorization: 'Bearer ' + getCookie('sAccessToken'),
-      }
-    }
-  }
-};
+var socket = io().connect(
+  'http://' + location.host,
+  {
+    transports: ['websocket'],
+  },
+);
 
-import $ from "jquery";
-//import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
-import toastr from "toastr";
+socket.on('notifyAboutNewReplique', function (r) {
+  console.log(r);
 
-var socket = io().connect('ws://' + location.host, socketOptions);
-// socket.on('newReponse', function(msg){
-//   console.log(msg);
-//   toastr.success('Вот радость! Вот счастье!', msg + ' заглянул к Вам на страничку.');
-// });
-socket.on('notifyNewVisitor', function(user){
-  console.log(user);
-  toastr.success('Вот радость! Вот счастье!', user + ' заглянул к Вам на страничку.');
+  toastr.options = {
+    debug: false,
+    positionClass: 'toast-bottom-right',
+    onClick: function (e) {
+      document.href = '/u/' + r.creator.pageURL + '/' + r.id;
+    },
+    // onHidden: function (e) {
+    //   document.href = '/u/' + r.creator.pageURL + '/' + r.id;
+    // },
+    fadeIn: 300,
+    fadeOut: 1000,
+    timeOut: 10000,
+    extendedTimeOut: 1000,
+    tapToDismiss: false,
+  };
+
+  toastr.info('Новая реплика от ' + r.creator.authorAlias, r.title);
 });

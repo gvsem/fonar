@@ -11,6 +11,7 @@ import { PageModule } from './page/page.module';
 import { RepliqueModule } from './replique/replique.module';
 import { ReponseModule } from './reponse/reponse.module';
 import { AuthModule } from './auth/auth.module';
+import { SocialbusModule } from "./socialbus/socialbus.module";
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -38,6 +39,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     RepliqueModule,
     ReponseModule,
+    SocialbusModule,
     forwardRef(() => TypeOrmModule.forFeature([User])),
   ],
   controllers: [AppController],
