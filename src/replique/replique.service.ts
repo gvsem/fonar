@@ -13,7 +13,8 @@ import { CreateRepliqueDto } from './dto/create.replique.dto';
 import { UpdateRepliqueDto } from './dto/update.replique.dto';
 import { UserService } from '../user/user.service';
 import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
-import { SocialBusGateway } from "../socialbus/reponse.gateway";
+import { GlobalBusGateway } from "../socialbus/global.gateway";
+import { User } from "../user/user.module";
 
 @Injectable()
 export class RepliqueService {
@@ -23,12 +24,12 @@ export class RepliqueService {
   @Inject(UserService)
   private userService: UserService;
 
-  @Inject(SocialBusGateway)
-  private bus: SocialBusGateway;
+  @Inject(GlobalBusGateway)
+  private bus: GlobalBusGateway;
 
   async getReplique(userId: number, repliqueId: number): Promise<Replique> {
     const r = await this.repliqueRepository.findOne({
-      relations: ['creator'],
+      relations: ['creator', 'discours', 'discours.creator' ],
       where: { id: repliqueId, isActive: true },
     });
     if (r === undefined || (r.creator.id !== userId && !r.isPublished)) {
@@ -36,6 +37,8 @@ export class RepliqueService {
         'Replique with id ' + repliqueId + ' not found.',
       );
     }
+    (r as any).creationDateTimestamp = r.creationDate?.getTime();
+    (r as any).publicationDateTimestamp = r.publicationDate?.getTime();
     return r;
   }
 
@@ -48,7 +51,7 @@ export class RepliqueService {
     const replique = new Replique();
     replique.title = repliqueDto.title;
     replique.abstractText = null;
-    replique.content = null;
+    replique.content = "[]";
     replique.creator = user;
     replique.isPublished = false;
     replique.isActive = true;
@@ -96,7 +99,7 @@ export class RepliqueService {
     const oReplique = await this.getReplique(userId, originId);
 
     replique.discours.forEach((e, index) => {
-      if (e == oReplique) delete replique.discours[index];
+      if (e.id == oReplique.id) delete replique.discours[index];
     });
 
     await this.repliqueRepository.save(replique);
@@ -120,31 +123,49 @@ export class RepliqueService {
     }
 
     const [result, total] = await this.repliqueRepository.findAndCount({
-      relations: ['creator'],
+      relations: ['creator', 'discours', 'discours.creator'],
       where: { creator: user.id, isActive: true, ...filterOptions },
       order: { publicationDate: 'DESC' },
       take: quantity,
       skip: skip,
     });
 
+    for (const r of result) {
+      (r as any).creationDateTimestamp = r.creationDate?.getTime();
+      (r as any).publicationDateTimestamp = r.publicationDate?.getTime();
+    }
+
     return {
       data: result,
       count: total,
+      length: quantity,
+      has_more: total - skip - quantity,
+      is_first_page: (skip == 0),
+      is_last_page: (total - skip - quantity <= 0),
     };
   }
 
   async getFeed(userId: number, skip: number, quantity: number) {
     const [result, total] = await this.repliqueRepository.findAndCount({
-      relations: ['creator'],
+      relations: ['creator', 'discours', 'discours.creator'],
       where: { isActive: true, isPublished: true },
       order: { publicationDate: 'DESC' },
       take: quantity,
       skip: skip,
     });
 
+    for (const r of result) {
+      (r as any).creationDateTimestamp = r.creationDate?.getTime();
+      (r as any).publicationDateTimestamp = r.publicationDate?.getTime();
+    }
+
     return {
       data: result,
       count: total,
+      length: quantity,
+      has_more: total - skip - quantity,
+      is_first_page: (skip == 0),
+      is_last_page: (total - skip - quantity <= 0),
     };
   }
 
@@ -164,5 +185,41 @@ export class RepliqueService {
     const replique = await this.getReplique(userId, repliqueId);
     replique.isActive = false;
     return await this.repliqueRepository.save(replique);
+  }
+
+  async searchRepliques(userId: number, query: string, skip: number, quantity: number) {
+    const [result, total] = await this.repliqueRepository.createQueryBuilder("replique")
+      .select([
+        'replique',
+        'creator'
+      ])
+      .where({ 'isActive': true, 'isPublished': true })
+      .andWhere('title ILIKE :query OR "abstractText" ILIKE :query OR content ILIKE :query', {
+        query: `%${query}%`
+      })
+      .leftJoin('replique.creator', 'creator')
+      .skip(skip)
+      .take(quantity)
+      //.orderBy('"publicationDate"','DESC')
+      .getManyAndCount();
+
+    for (const r of result) {
+      (r as any).creationDateTimestamp = r.creationDate?.getTime();
+      (r as any).publicationDateTimestamp = r.publicationDate?.getTime();
+    }
+
+    return {
+      data: result,
+      count: total,
+      length: quantity,
+      has_more: total - skip - quantity,
+      is_first_page: (skip == 0),
+      is_last_page: (total - skip - quantity <= 0),
+    };
+  }
+
+  async getOrigins(userId: number, repliqueId: number) : Promise<Replique[]> {
+    let r = (await this.getReplique(userId, repliqueId));
+    return r.discours;
   }
 }

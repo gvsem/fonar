@@ -3,7 +3,6 @@ import { join } from 'path';
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { User, UserModule } from './user/user.module';
@@ -42,7 +41,7 @@ import { SocialbusModule } from "./socialbus/socialbus.module";
     SocialbusModule,
     forwardRef(() => TypeOrmModule.forFeature([User])),
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService],
 })
 export class AppModule {}

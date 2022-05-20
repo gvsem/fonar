@@ -44,6 +44,24 @@ export class ReponseService {
     return reponse;
   }
 
+  async getReponses(userId: number, repliqueId: number): Promise<Reponse[]> {
+    const reponse = await this.reponseRepository.findAndCount({
+      relations: [ 'creator' ],
+      where: { replique: { id: repliqueId } },
+      order: { publicationDate: 'DESC' },
+    });
+    if (reponse === undefined) {
+      throw new NotFoundException('The following replique has not been found.');
+    }
+
+    for (const r of reponse[0]) {
+      (r as any).creationDateTimestamp = r.creationDate?.getTime();
+      (r as any).publicationDateTimestamp = r.publicationDate?.getTime();
+    }
+
+    return reponse[0];
+  }
+
   async createReponse(
     userId: number,
     reponseDto: CreateReponseDto,
@@ -60,9 +78,16 @@ export class ReponseService {
       isPublished: true,
       isActive: true,
       creationDate: new Date(),
+      publicationDate: new Date(),
       text: reponseDto.text,
     };
 
-    return await this.reponseRepository.save(reponse);
+    let r = await this.reponseRepository.save(reponse);
+
+    (r as any).creationDateTimestamp = reponse.creationDate?.getTime();
+    (r as any).publicationDateTimestamp = reponse.publicationDate?.getTime();
+
+    return r;
+
   }
 }

@@ -8,6 +8,14 @@
 
 {{> nav}}
 
+  {{# if e404 }}
+    {{> error/e404 }}
+  {{/if}}
+
+{{# if page.feed }}
+  {{> profile/repliques }}
+{{/if}}
+
 {{# if page.profile }}
   {{> profile/header}}
   {{> profile/repliques }}
@@ -29,30 +37,10 @@
 
 {{/if}}
 
+{{> footer}}
 
 </body>
 
 {{> js }}
-
-{{# if page.settings }}
-
-  <script type="module" src="/assets/js/settings.js"></script>
-
-{{/if}}
-
-{{# if page.replique }}
-
-  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
-  <script type="module" src="/assets/js/replique.js"></script>
-
-{{/if}}
-
-{{# if page.replique_edit }}
-
-
-  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
-  <script type="module" src="/assets/js/replique.js"></script>
-
-{{/if}}
 
 </html>

@@ -16,7 +16,14 @@
   <div id="app-nav-bar" class="navbar-menu has-shadow">
     <div class="navbar-start">
 
-      {{#each navigation.menu as |element|}}
+
+      <a class="navbar-item">
+        <input class="input is-primary" id="replique-search" class="input is-small" name="title" type="text"
+               placeholder="Отыскание реплик..."
+               value="">
+      </a>
+
+      {{#each navigation.menu_left as |element|}}
         {{#> childEntry}}
 
           {{#if element.items}}
@@ -69,6 +76,56 @@
     </div>
 
     <div class="navbar-end">
+
+      {{#each navigation.menu_right as |element|}}
+        {{#> childEntry}}
+
+          {{#if element.items}}
+
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                {{element.title}}
+              </a>
+
+              <div class="navbar-dropdown">
+
+                {{#each element.items as |dropdown_element|}}
+                  {{#> childEntry}}
+
+                    {{#if dropdown_element.divider }}
+
+                      <hr class="navbar-divider">
+
+                    {{else}}
+
+                      <a class="navbar-item" {{#if dropdown_element.href}}
+                         href="{{dropdown_element.href}}"
+                      {{/if}}>
+                        {{dropdown_element.title}}
+                      </a>
+
+                    {{/if}}
+
+                  {{/childEntry}}
+                {{/each}}
+
+              </div>
+            </div>
+
+          {{else}}
+
+            <a class="navbar-item" {{#if element.href}}
+               href="{{element.href}}"
+            {{/if}}>
+              {{element.title}}
+            </a>
+
+          {{/if}}
+
+
+        {{/childEntry}}
+      {{/each}}
+
 
       {{#if session.authorized }}
         <div class="navbar-item">

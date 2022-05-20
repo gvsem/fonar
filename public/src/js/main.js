@@ -54,3 +54,20 @@ $('.replique-content').each(function (index, e) {
     console.log(e);
   }
 });
+
+$('#replique-search').on('keyup', function (e) {
+  if (e.keyCode == 13) {
+    try {
+      window.location.href = "/search?q=" + $(this).val();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+});
+
+$('time').each(function( index ) {
+  var t = $(this).attr('unixstamp');
+
+  $(this).text(new Date(parseInt(t)).toLocaleDateString("ru-RU"));
+});
+

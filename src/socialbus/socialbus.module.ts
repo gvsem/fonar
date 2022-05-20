@@ -1,10 +1,10 @@
 import { forwardRef, Module } from "@nestjs/common";
-import { SocialBusGateway } from "./reponse.gateway";
+import { GlobalBusGateway } from "./global.gateway";
 import { UserModule } from "../user/user.module";
 
 @Module({
-  providers: [SocialBusGateway],
+  providers: [GlobalBusGateway],
   imports: [forwardRef(() => UserModule)],
-  exports: [SocialBusGateway],
+  exports: [GlobalBusGateway],
 })
 export class SocialbusModule {}

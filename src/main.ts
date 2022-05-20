@@ -3,13 +3,10 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import * as hbs from 'hbs';
-import * as exphbs from 'express-handlebars';
 import * as layouts from 'handlebars-layouts';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { ValidationError } from 'class-validator';
+import { ValidationPipe } from '@nestjs/common';
 import supertokens from 'supertokens-node';
-import { SupertokensExceptionFilter } from './auth/auth.filter';
 
 import { ApiExceptionFilter } from './api.exception.filter';
 
@@ -28,7 +25,6 @@ async function bootstrap() {
   });
   app.useGlobalFilters(new ApiExceptionFilter());
 
-
   hbs.registerPartials(join(__dirname, '..', 'views/partials'));
   hbs.registerHelper(layouts(hbs));
 
@@ -46,7 +42,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Fonar Social Network')
     .setDescription('The Fonar API description')
-    .setVersion('0.4')
+    .setVersion('0.7')
     .addTag('fonar')
     .addCookieAuth('sAccessToken')
     .build();

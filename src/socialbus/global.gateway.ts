@@ -18,7 +18,7 @@ import { Replique } from '../replique/replique.entity';
   transports: ['polling'],
 })
 //@UseGuards(AuthRequiredGuard)
-export class SocialBusGateway
+export class GlobalBusGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer() server: Server;

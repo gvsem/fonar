@@ -2,16 +2,16 @@ import {
   Controller,
   Get,
   HttpStatus,
-  Param,
+  Param, Query,
   Redirect,
   Render,
   Req,
   UnauthorizedException,
   UseFilters,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards
+} from "@nestjs/common";
 import { PageService } from './page.service';
-import { AppSession } from '../auth/session.decorator';
+import { AppSession } from '../auth/appsession.decorator';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { UserService } from '../user/user.service';
 import { UserAvailableGuard } from '../auth/guards/user.available.guard';
@@ -20,41 +20,63 @@ import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { PageExceptionFilter } from './page.exception.filter';
 import { UserOwnsRepliqueGuard } from '../replique/guards/owns.replique.guard';
+import { ReponseService } from "../reponse/reponse.service";
 
 @ApiTags('frontend')
 @Controller()
-@UseFilters(new PageExceptionFilter())
+@UseFilters(PageExceptionFilter)
 @UseGuards(AuthGuard)
 export class PageController {
   constructor(
     private readonly pageService: PageService,
     private readonly repliqueService: RepliqueService,
+    private readonly reponseService: ReponseService,
     private readonly userService: UserService,
   ) {}
 
-  @Get('/')
+  private readonly REPLIQUES_PER_PAGE: number = 15;
+
+  @Get('/404')
   @Render('index')
-  async index(@AppSession() session) {
+  async e404(@AppSession() session) {
     return {
       ...session,
-      page: {},
+      e404: true,
     };
   }
 
-  @Get('feed')
+  @Get(['/', 'feed', 'search'])
   @Render('index')
-  @UseGuards(AuthRequiredGuard)
-  async feed(@AppSession() app) {
+  //@UseGuards(AuthRequiredGuard)
+  async feed(@AppSession() app, @Query('page') page: number, @Query('q') q: string) {
     const r: any = {
       ...app,
-      page: { all_authors: true },
+      page: { feed: true },
     };
 
-    r.repliques = await this.repliqueService.getFeed(
-      app.session.user.id,
-      0,
-      20,
-    );
+    if (page == undefined) {
+      page = 1;
+    }
+    r.page.n = page;
+    r.page.prev = page - 1;
+    r.page.next = page + 1;
+
+    if ((q != undefined) && (q != "")) {
+      r.repliques = await this.repliqueService.searchRepliques(
+        app.session.user.id,
+        q,
+        this.REPLIQUES_PER_PAGE * (page - 1),
+        this.REPLIQUES_PER_PAGE,
+      );
+      r.search_query = q;
+    } else {
+      r.repliques = await this.repliqueService.getFeed(
+        app.session.user.id,
+        this.REPLIQUES_PER_PAGE * (page - 1),
+        this.REPLIQUES_PER_PAGE,
+      );
+    }
+
     return r;
   }
 
@@ -70,8 +92,8 @@ export class PageController {
 
   @Get('u/:login')
   @Render('index')
-  @UseGuards(UserAvailableGuard)
-  async profile(@Param('login') login: string, @AppSession() app) {
+  //@UseGuards(UserAvailableGuard)
+  async profile(@Param('login') login: string, @AppSession() app, @Query('page') page: number) {
     const r: any = {
       ...app,
       page: { profile: true },
@@ -80,11 +102,18 @@ export class PageController {
     r.user = await this.userService.getUserByURL(login);
     r.page.my = app.session.authorized && app.session.user.login == login;
 
-    r.user.repliques = await this.repliqueService.getRepliques(
+    if (page == undefined) {
+      page = 1;
+    }
+    r.page.n = page;
+    r.page.prev = page - 1;
+    r.page.next = page + 1;
+
+    r.repliques = await this.repliqueService.getRepliques(
       app.session.user.id,
       login,
-      0,
-      10,
+      this.REPLIQUES_PER_PAGE * (page - 1),
+      this.REPLIQUES_PER_PAGE,
     );
 
     return r;
@@ -110,6 +139,11 @@ export class PageController {
       app.session.user.id,
       repliqueId,
     );
+    // r.replique.creationDateTimestamp = r.replique.creationDate?.getTime();
+    // r.replique.publicationDateTimestamp = r.replique.publicationDate?.getTime();
+
+    r.replique.reponses = await this.reponseService.getReponses(app.session.user.id, repliqueId);
+
     r.replique.my =
       app.session.authorized && app.session.user.id == r.replique.creator.id;
 
@@ -136,6 +170,9 @@ export class PageController {
       app.session.user.id,
       repliqueId,
     );
+    r.replique.creationDateTimestamp = r.replique.creationDate?.getTime();
+    r.replique.publicationDateTimestamp = r.replique.publicationDate?.getTime();
+    console.log(r);
     r.replique.my =
       app.session.authorized && app.session.user.id == r.replique.creator.id;
     //r.replique.htmlContent = r.replique.htmlContent();

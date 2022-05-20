@@ -38,4 +38,12 @@ export class Replique extends Publication {
     return '';
   }
 
+  public creationDateTimestamp() : number {
+    return this.creationDate?.getTime();
+  }
+
+  public publishedDateTimestamp() : number {
+    return this.publicationDate?.getTime();
+  }
+
 }

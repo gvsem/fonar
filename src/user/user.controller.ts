@@ -20,7 +20,7 @@ import {
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { RepliqueService } from '../replique/replique.service';
-import { AppSession } from '../auth/session.decorator';
+import { AppSession } from '../auth/appsession.decorator';
 import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
 
 @ApiCookieAuth()
