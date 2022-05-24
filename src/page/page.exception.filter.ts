@@ -30,7 +30,7 @@ export class PageExceptionFilter implements ExceptionFilter {
       return;
     }
 
-    if (exception instanceof NotFoundException) {
+    if (exception.getStatus() == 404) {
       const instance = this.adapterHost.httpAdapter.getInstance();
       request.url = '/404';
       instance._router.handle(request, response, null);
