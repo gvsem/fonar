@@ -53,7 +53,7 @@ $("#replique-delete").click(async function(e) {
 
   request
     .done(function(response, textStatus, jqXHR) {
-      window.location.href = "../";
+      window.location.href = "./";
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
       $("#updateErrorNotification").text("Удаление реплики не удалось. Значит — это кому-нибудь нужно?");
