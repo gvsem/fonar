@@ -9,13 +9,17 @@ import { Replique } from './replique.entity';
 import { RepliqueController } from './replique.controller';
 import { RepliqueService } from './replique.service';
 import { SocialbusModule } from "../socialbus/socialbus.module";
+import { RepositoryProvider } from "../repository.provider";
+import { AppModule } from "../app.module";
 
 @Module({
   imports: [
     forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User])),
+    forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User], 'test')),
     forwardRef(() => ReponseModule),
     forwardRef(() => UserModule),
     forwardRef(() => SocialbusModule),
+    RepositoryProvider
   ],
   controllers: [RepliqueController],
   providers: [RepliqueService, Replique],

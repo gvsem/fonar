@@ -13,16 +13,18 @@ import { User } from './user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { AuthMiddleware } from '../auth/auth.middleware';
+import { RepositoryProvider } from "../repository.provider";
 
 @Module({
   imports: [
     forwardRef(() => TypeOrmModule.forFeature([User])),
+    forwardRef(() => TypeOrmModule.forFeature([User], 'test')),
     forwardRef(() => ReponseModule),
     forwardRef(() => RepliqueModule),
   ],
   controllers: [UserController],
-  providers: [User, UserService],
-  exports: [User, UserService],
+  providers: [User, UserService, RepositoryProvider],
+  exports: [User, UserService, RepositoryProvider],
 })
 export class UserModule {}
 

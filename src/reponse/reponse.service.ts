@@ -6,7 +6,7 @@ import {
   NotImplementedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from "typeorm";
 
 import { Reponse } from './reponse.entity';
 import { CreateReponseDto } from './dto/create.reponse.dto';
@@ -14,17 +14,24 @@ import { Replique } from '../replique/replique.module';
 import { User } from '../user/user.module';
 import { RepliqueService } from '../replique/replique.service';
 import { UserService } from '../user/user.service';
+import { RepositoryProvider } from "../repository.provider";
 
 @Injectable()
 export class ReponseService {
+
   @Inject(RepliqueService)
   private repliqueService: RepliqueService;
 
   @Inject(UserService)
   private userService: UserService;
 
-  @InjectRepository(Reponse)
-  private reponseRepository: Repository<Reponse>;
+  // @InjectRepository(Reponse)
+  // private reponseRepository: Repository<Reponse>;
+
+  @Inject(RepositoryProvider) private repositoryProvider;
+  private reponseRepository() : Repository<Reponse> {
+    return this.repositoryProvider.getRepository(Reponse);
+  }
 
   async getReponsesByReplique(
     userId: number,
@@ -35,7 +42,7 @@ export class ReponseService {
   }
 
   async getReponse(userId: number, reponseId: string): Promise<Reponse> {
-    const reponse = await this.reponseRepository.findOne({
+    const reponse = await this.reponseRepository().findOne({
       where: { id: reponseId },
     });
     if (reponse === undefined) {
@@ -45,7 +52,7 @@ export class ReponseService {
   }
 
   async getReponses(userId: number, repliqueId: number): Promise<Reponse[]> {
-    const reponse = await this.reponseRepository.findAndCount({
+    const reponse = await this.reponseRepository().findAndCount({
       relations: [ 'creator' ],
       where: { replique: { id: repliqueId } },
       order: { publicationDate: 'DESC' },
@@ -82,7 +89,7 @@ export class ReponseService {
       text: reponseDto.text,
     };
 
-    let r = await this.reponseRepository.save(reponse);
+    let r = await this.reponseRepository().save(reponse);
 
     (r as any).creationDateTimestamp = reponse.creationDate?.getTime();
     (r as any).publicationDateTimestamp = reponse.publicationDate?.getTime();
