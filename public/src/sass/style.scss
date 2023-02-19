@@ -1,51 +1,21 @@
 @charset "utf-8";
 
-// Import a Google Font
+// Fonts
 @import url('https://fonts.googleapis.com/css?family=Inter:100,200,300,400,500,600,700,800,900');
-
-// Set your brand colors
-$logo-background: #364968;
-$logo-text: #FDDF97;
-
-$pink: #FA7C21;
-$brown: #757763;
-$beige-light: #D0D1CD;
-$beige-lighter: #EFF0EB;
-
-//012
-
-// Update Bulma's global variables
-//$family-sans-serif: "Inter", sans-serif;
 $title-family: "Inter", sans-serif;
 $family-primary: "Inter", sans-serif;
 
-//$grey-dark: $brown;
-//$grey-light: $beige-light;
+// Colors
+$logo-background: #364968;
+$logo-text: #FDDF97;
 
 $primary: $logo-text;
-
 $link: $logo-background;
-$primary: $logo-text;
 
-//$link-text: $logo-text;
-
-//.is-link {
-//  color: $logo-text;
-//}
 $button-color: $logo-text;
 
-//: $logo-text;
-
-$widescreen-enabled: false;
-$fullhd-enabled: false;
-
-// Update some of Bulma's component variables
-//$body-background-color: $beige-lighter;
-//$control-border-width: 2px;
-//$input-border-color: transparent;
-//$input-shadow: none;
-
-// Import only what you need from Bulma
+//$widescreen-enabled: false;
+//$fullhd-enabled: false;
 
 // Navigation
 $navbar-background-color: $logo-background;
@@ -61,14 +31,19 @@ $navbar-item-hover-background-color: $logo-background;
 
 $navbar-dropdown-background-color: $logo-background;
 $navbar-dropdown-arrow: $logo-text;
-$navbar-dropdown-item-hover-color: $logo-background;
+$navbar-dropdown-item-hover-color: $logo-text;
 $navbar-dropdown-item-hover-background-color: $logo-text;
 
+// Footer
+
+$footer-background-color: $logo-background;
+$footer-padding: 1.5rem 1.5rem 1.5rem;
+$footer-color: true;
+
+// Columns
 
 
-@charset "utf-8";
 @import "../../node_modules/bulma/bulma.sass";
-
 //@import "../../node_modules/bulma/bulma";
 //@import "../../node_modules/bulma/sass/utilities/all";
 //@import "../../node_modules/bulma/sass/base/all";
@@ -81,6 +56,7 @@ $navbar-dropdown-item-hover-background-color: $logo-text;
 //@import "../../node_modules/bulma/sass/layout/section";
 
 
+// Navigation
 #app-nav .navbar-brand .navbar-item, .logo-text {
   font-size: 26pt;
   font-weight: 900;
@@ -102,6 +78,27 @@ $navbar-dropdown-item-hover-background-color: $logo-text;
   color: #4a4a4a;
 }
 
+a.navbar-burger:hover {
+  color: $logo-text;
+}
+
+// Footer
+body > footer a, body > footer strong {
+  color: $logo-text;
+}
+
+body > footer a:hover {
+  color: $logo-text;
+  text-decoration: underline;
+}
+
+
+// ==================================================
+// Custom settings
+
+
+// Form warnings
+
 .is-success-animated{
   @extend .is-success;
   -webkit-transition: all 0.1s ease;
@@ -118,3 +115,27 @@ $navbar-dropdown-item-hover-background-color: $logo-text;
   transition: all 0.1s ease;
 }
 
+
+// Editor.js styles
+
+.ce-block__content, .ce-toolbar__content { max-width:calc(100% - 80px) !important; } .cdx-block { max-width: 100% !important; }
+
+// Columns reversed
+
+@media(max-width: $desktop) {
+  .columns.is-reversed-touch {
+    flex-direction: column-reverse;
+    display: flex;
+  }
+}
+
+@media(max-width: $tablet) {
+  .columns.is-reversed-mobile {
+    flex-direction: column-reverse;
+    display: flex;
+  }
+}
+
+#reponses:empty::after {
+  content: "Ум взыскует диалога. Начнете первым?"
+}

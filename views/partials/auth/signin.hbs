@@ -12,7 +12,7 @@
         <form id="login-form" novalidate="novalidate">
 
           <div class="field" id="email-field">
-            <label class="label"></label>
+            <label class="label">Просим Вас к Фонарю:</label>
             <div class="control has-icons-left has-icons-right">
               <input class="input" type="email" placeholder="Адрес для корреспонденции" data-validation="email"
                      name="email" required>
@@ -30,6 +30,10 @@
                 <i class="fas fa-lock"></i>
               </span>
             </p>
+          </div>
+
+          <div class="notification is-danger is-light is-hidden" id="error-login">
+            Ваши адрес для электронной корреспонденции и парольный автограф не нашли соответствия.
           </div>
 
           <div class="field is-grouped">

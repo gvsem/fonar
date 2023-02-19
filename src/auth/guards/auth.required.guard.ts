@@ -14,7 +14,7 @@ import {
 } from 'supertokens-node/lib/build/recipe/session';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
-import { AppSession } from '../session.decorator';
+import { AppSession } from '../appsession.decorator';
 import { AppService } from '../../app.service';
 
 @Injectable()
@@ -23,8 +23,8 @@ export class AuthRequiredGuard implements CanActivate {
   protected userService: UserService;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const ctx = context.switchToHttp();
 
+    const ctx = context.switchToHttp();
     const request = ctx.getRequest();
     const resp = ctx.getResponse();
 

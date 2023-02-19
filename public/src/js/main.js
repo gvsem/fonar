@@ -1,7 +1,7 @@
 import Bulma from '@vizuaalog/bulmajs';
 import $ from 'jquery';
 
-$('#create-replique').keyup(function (e) {
+$('#create-replique').on('keyup', function (e) {
   if (e.keyCode == 13) {
     var element = $(this);
     var n = $(this).attr('name');
@@ -21,11 +21,11 @@ $('#create-replique').keyup(function (e) {
         .done(function (response, textStatus, jqXHR) {
           console.log('done');
           element.addClass('is-success-animated');
-          window.location.replace(
+          window.location.href = (
             '/u/' +
-              response.replique.creator.pageURL +
+              response.creator.pageURL +
               '/' +
-              response.replique.id,
+              response.id + '/edit'
           );
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -54,3 +54,20 @@ $('.replique-content').each(function (index, e) {
     console.log(e);
   }
 });
+
+$('#replique-search').on('keyup', function (e) {
+  if (e.keyCode == 13) {
+    try {
+      window.location.href = "/search?q=" + $(this).val();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+});
+
+$('time').each(function( index ) {
+  var t = $(this).attr('unixstamp');
+
+  $(this).text(new Date(parseInt(t)).toLocaleDateString("ru-RU"));
+});
+

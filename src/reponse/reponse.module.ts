@@ -11,6 +11,7 @@ import { ReponseService } from './reponse.service';
 @Module({
   imports: [
     forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User])),
+    forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User], 'test')),
     forwardRef(() => RepliqueModule),
     forwardRef(() => UserModule),
   ],

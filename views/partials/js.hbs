@@ -1,1 +1,23 @@
+
+{{#if session.authorized }}
+<!--  <script type="module" src="https://cdn.socket.io/4.4.1/socket.io.esm.min.js"></script> -->
+  <script type="module" src="/assets/js/socialbus.js"></script>
+{{/if}}
+
 <script type="module" src="/assets/js/main.js"></script>
+
+{{# if page.settings }}
+
+  <script type="module" src="/assets/js/settings.js"></script>
+
+{{/if}}
+
+{{# if page.replique }}
+  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
+  <script type="module" src="/assets/js/replique.js"></script>
+{{/if}}
+
+{{# if page.replique_edit }}
+  <script type="application/json" id="replique-initial-content">{{{replique.content}}}</script>
+  <script type="module" src="/assets/js/replique.js"></script>
+{{/if}}

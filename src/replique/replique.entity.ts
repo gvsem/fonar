@@ -38,14 +38,12 @@ export class Replique extends Publication {
     return '';
   }
 
-  // public htmlContent() : string {
-  //   try {
-  //     const edjsParser = edjsHTML();
-  //     let doc: any = JSON.parse(this.content);
-  //     return edjsParser.parse(doc).join('');
-  //   } catch (e: any) {
-  //     console.log(e);
-  //     return this.content;
-  //   }
-  // }
+  public creationDateTimestamp() : number {
+    return this.creationDate?.getTime();
+  }
+
+  public publishedDateTimestamp() : number {
+    return this.publicationDate?.getTime();
+  }
+
 }

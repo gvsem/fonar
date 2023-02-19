@@ -10,7 +10,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && cd public && npm run build && cd ..",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prestart": "cd public && npm run build && cd ..",
@@ -30,9 +30,11 @@
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-socket.io": "^8.4.4",
     "@nestjs/serve-static": "^2.2.2",
     "@nestjs/swagger": "^5.2.1",
     "@nestjs/typeorm": "^8.0.0",
+    "@nestjs/websockets": "^8.4.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "editorjs-html": "^3.4.2",
@@ -43,6 +45,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "sqlite3": "^5.0.8",
     "supertokens-node": "^9.2.0",
     "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.45"

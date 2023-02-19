@@ -1,19 +1,42 @@
-<div class="container" style="margin-top: 15px;">
+<div class="container" style="margin-top: 15px; margin-bottom: 15px; padding: 8px;">
 
 
+  {{#if session.authorized }}
+  {{else}}
+    <article class="message is-primary">
+      <div class="message-body"><strong>Приглашаем Вас
+        <a class="is-primary is-small" href="/auth/signup"
+           style="padding-top:0px; padding-bottom: 0px; height: 20pt;"><strong>присоединиться</strong></a>
+        или <a class="is-light is-small" href="/auth/signin"
+              style="padding-top:0px; padding-bottom: 0px; height: 20pt;"><strong>пройти</strong></a>
+        к Фонарю.</strong><br>
+        <p style="padding: 8px;
+    ">Веленью божию, о муза, будь послушна,<br>
+          Обиды не страшась, не требуя венца;<br>
+          Хвалу и клевету приемли равнодушно<br>
+          И не оспаривай глупца.<br><br>
+
+          <span class="is-size-7">
+«Я памятник себе воздвиг нерукотворный…», А.С. Пушкин
+
+</span>
+        </p>
+      </div>
+    </article>
+  {{/if}}
   <!--  <div class="tile is-ancestor">-->
   <!--    <div class="tile is-vertical">-->
 
-  <div class="columns">
+  <div class="columns is-reversed-touch is-reversed-mobile">
 
     <div class="column">
 
-      {{#if user.repliques.count }}
+      {{#if repliques.data.length}}
 
-        {{#each user.repliques.data as |replique|}}
+        {{#each repliques.data as |replique|}}
           {{#> childEntry}}
 
-            <div class="card" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="card" style="margin-top: 10px; margin-bottom: 10px;">
 
               <div class="card-content">
                 <div class="media">
@@ -28,35 +51,88 @@
                       {{/if}}
 
                     </p>
-                    <a class="subtitle is-6" href="{{replique.creator.getPageURL}}">
+                    <a class="subtitle is-6" href="/u/{{replique.creator.pageURL}}">
                       <span class="icon"><i class="fas fa-user"></i></span>
                       {{replique.creator.authorAlias}}
                     </a>
+
+                    <span class="icon"><i class="fas fa-clock"></i></span>
+                    {{# if replique.isPublished }}
+                      <time unixstamp="{{ replique.publicationDateTimestamp }}"></time>
+                    {{else}}
+                      <time unixstamp="{{ replique.creationDateTimestamp }}"></time>
+                    {{/if}}
+
                   </div>
                 </div>
+
+                {{#if replique.discours.length}}
+
+                  <div class="box">
+                    <article class="media">
+                      <div class="media-left">
+                      <span class="icon is-small">
+                           <i class="fas fa-reply" aria-hidden="true"></i>
+                      </span>
+                      </div>
+                      <div class="media-content">
+                        <div class="content">
+                          {{#each replique.discours as |origin|}}
+                            {{#> childEntry}}
+                              <p style="margin-bottom: 0px;">
+                                <strong><a
+                                  href="/u/{{origin.creator.pageURL}}/{{ origin.id }}">{{ origin.title }}</a></strong>
+                                <small><a
+                                  href="/u/{{origin.creator.pageURL}}">{{ origin.creator.authorAlias }}</a></small>
+
+                                <!--                                <button class="button is-danger is-small" id="origin-delete" style="font-size: 9px;">Удалить</button>-->
+
+                              </p>
+                            {{/childEntry}}
+                          {{/each}}
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+
+                {{/if}}
 
                 <div class="content">
                   {{# if replique.abstractText }}
                     {{ replique.abstractText }}
                   {{else}}
-                    <div class="replique-content is-hidden" replique-id="{{ replique.id }}" style="border-width: 1px;">{{{replique.content}}}</div>
+                    <div class="replique-content is-hidden" replique-id="{{ replique.id }}"
+                         style="border-width: 1px;">{{{replique.content}}}</div>
                   {{/if}}
 
                   <br>
-                  <time datetime="2016-1-1" timestamp="{{ replique.publicationDate }}"></time>
                 </div>
               </div>
             </div>
 
-
-
           {{/childEntry}}
         {{/each}}
+
+        {{#if repliques.is_first_page }}
+        {{else}}
+          <a class="button is-primary" href="?page={{ page.prev }}">Раньше</a>
+        {{/if}}
+
+        {{#if repliques.is_last_page }}
+        {{else}}
+          <a class="button is-primary" href="?page={{ page.next }}">Позже</a>
+        {{/if}}
 
       {{else}}
         <div class="content">
 
-          <h3>Кажется, опубликованных реплик нет.</h3>
+          {{#if search_query }}
+            <h3>Кажется, реплик по запросу
+              <span class="has-text-primary" style="text-shadow: 1.5px 0.5px 0px #4a4a4a;">{{ search_query }}</span>
+              попросту нет.</h3>
+          {{else}}
+            <h3>Кажется, опубликованных реплик нет.</h3>
+          {{/if}}
 
           <blockquote style="max-width: 400px;">
             <p style="font-weight: bold;">
@@ -75,8 +151,8 @@
       <div class="column is-4">
         <article class="tile is-child notification is-link">
           <div class="content">
-            <p class="title">Новая реплика</p>
-            <p class="subtitle">Введите заголовок, чтобы создать набросок:</p>
+            <p class="title is-5">Новая реплика</p>
+            <p class="subtitle is-6">Введите заголовок, чтобы создать набросок:</p>
             <div class="content">
               <input id="create-replique" class="input is-normal" name="title" type="text"
                      placeholder="Название реплики"
@@ -94,3 +170,4 @@
 
   <!--</div>-->
 </div>
+

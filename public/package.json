@@ -5,32 +5,38 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "css-build": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss ../assets/css/style.css",
-    "css-watch": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss ../assets/css/style.css --watch",
-    "build": "npx webpack && npm run css-build"
+    "css-build": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss assets/css/style.css",
+    "css-watch": "node-sass --source-map true --source-map-contents --source-map-embed src/sass/style.scss assets/css/style.css --watch",
+    "build": "npm install && npx webpack-cli && npm run css-build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@editorjs/code": "^2.7.0",
     "@editorjs/editorjs": "^2.23.2",
     "@editorjs/header": "^2.6.2",
+    "@editorjs/link": "^2.4.1",
     "@editorjs/list": "^1.7.0",
     "@editorjs/paragraph": "^2.8.0",
+    "@editorjs/quote": "^2.4.0",
     "@editorjs/table": "^2.0.2",
     "@vizuaalog/bulmajs": "^0.12.1",
     "bulma": "^0.9.3",
     "bulma-validator": "^3.3.1",
     "editorjs-html": "^3.4.2",
     "jquery": "^3.6.0",
+    "js-cookie": "^3.0.1",
     "js-sha512": "^0.8.0",
+    "node-sass": "^7.0.1",
     "react": "^18.0.0",
+    "socket.io-client": "^4.5.0",
     "supertokens-auth-react": "^0.20.4",
-    "supertokens-website": "^10.0.10"
+    "supertokens-website": "^10.0.10",
+    "toastr": "^2.1.4",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
   },
   "devDependencies": {
-    "@editorjs/code": "^2.7.0",
-    "@editorjs/link": "^2.4.1",
-    "@editorjs/quote": "^2.4.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2"
   }

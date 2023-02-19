@@ -8,24 +8,24 @@ export class PageService {
 
   static getNavigation(tr: any): any {
     return {
-      menu: [
+      menu_right: [
         {
           title: tr.navigation.feed,
           href: AppService.getAppConfiguration().links.feed,
           active: true,
         },
-        {
-          title: tr.navigation.all_users,
-          href: AppService.getAppConfiguration().links.all_users,
-          active: true,
-          items: [
-            {
-              title: 'Николай Гумилев',
-              href: '/u/gumilev',
-            },
-            { divider: true },
-          ],
-        },
+        // {
+        //   title: tr.navigation.all_users,
+        //   href: AppService.getAppConfiguration().links.all_users,
+        //   active: true,
+        //   items: [
+        //     {
+        //       title: 'Николай Гумилев',
+        //       href: '/u/gumilev',
+        //     },
+        //     { divider: true },
+        //   ],
+        // },
         {
           title: tr.navigation.my_page,
           href: AppService.getAppConfiguration().links.my_page,

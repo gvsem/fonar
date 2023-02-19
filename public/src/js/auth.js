@@ -179,6 +179,8 @@ var loginForm = $("#login-form");
 loginForm.submit(async function(e) {
   e.preventDefault();
 
+  $('#error-login').addClass('is-hidden');
+
   if (await validateLoginForm(loginForm)) {
     loginForm.find("button[type=submit]").prop("disabled", true);
 
@@ -215,14 +217,16 @@ loginForm.submit(async function(e) {
         //$("<a href='/me'></a>").click();
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error(
-          "The following error occurred: " + textStatus,
-          errorThrown
-        );
+        $('#error-login').removeClass('is-hidden');
+
       }).always(function() {
       loginForm.find("button[type=submit]").removeAttr("disabled");
       loginForm.find("button[type=submit]").removeClass("is-loading");
     });
+  } else {
+
+    $('#error-login').removeClass('is-hidden');
+
   }
 
   return false;

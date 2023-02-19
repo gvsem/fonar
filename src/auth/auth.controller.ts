@@ -23,7 +23,7 @@ import {
 import { CreateUserDto } from '../user/dto/create.user.dto';
 import { UserService } from '../user/user.service';
 import { AuthGuard } from './guards/auth.guard';
-import { AppSession } from './session.decorator';
+import { AppSession } from './appsession.decorator';
 import supertokens from 'supertokens-node';
 import session from 'supertokens-node/recipe/session';
 

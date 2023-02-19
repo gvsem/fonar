@@ -8,6 +8,7 @@ export class UserAvailableGuard extends AuthGuard {
       return false;
     }
 
+    // By default, every user is available
     return true;
   }
 }

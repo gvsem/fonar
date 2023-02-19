@@ -6,6 +6,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { TranslationService } from './translation/translation.service';
 import { UserModule } from '../user/user.module';
 import { RepliqueModule } from '../replique/replique.module';
+import { SocialbusModule } from "../socialbus/socialbus.module";
+import { ReponseModule } from "../reponse/reponse.module";
 
 console.log(__dirname);
 
@@ -17,6 +19,8 @@ console.log(__dirname);
     }),
     forwardRef(() => UserModule),
     forwardRef(() => RepliqueModule),
+    forwardRef(() => ReponseModule),
+    forwardRef(() => SocialbusModule),
   ],
   controllers: [PageController],
   providers: [PageService, TranslationService],

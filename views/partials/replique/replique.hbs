@@ -1,70 +1,278 @@
-<div class="container" style="margin-top: 15px;">
+<div class="container" style="margin-top: 15px; margin-bottom: 15px;">
 
 
   <div class="card">
 
     <div class="card-content">
-      <div class="media">
-        <div class="media-content">
-          <p class="title is-5" style="margin: auto;">
-            <a href="{{replique.getRepliqueURL}}">{{replique.title}}</a>
 
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title is-size-4">
+            {{#if page.replique_edit }}
+              <input class="input" id="replique-title" type="text" placeholder="Название Вашей реплики"
+                     value="{{ replique.title }}">
+            {{else}}
+              {{replique.title}}
+            {{/if}}
+          </p>
+          <p class="title is-5" style="margin: auto; margin-right: 10px;">
             {{# if replique.isPublished }}
             {{else}}
               <span class="tag is-link is-6">набросок</span>
-              <!-- <span class="icon"><i class="fas fa-pencil-ruler"></i></span> -->
             {{/if}}
-
-            {{#if replique.my }}
-              <a class="button is-primary is-small" href="/u/{{replique.creator.pageURL}}/{{replique.id}}/edit">Редактировать</a>
-            {{/if}}
-
           </p>
-          <a class="subtitle is-6" href="/u/{{replique.creator.pageURL}}">
-            <span class="icon"><i class="fas fa-user"></i></span>
-            {{replique.creator.authorAlias}}
-          </a>
-        </div>
+        </header>
+        <footer class="card-footer" style="padding: 10px;">
+          <div class="columns" style="width:100%;">
+            <div class="column is-one-fifths">
+              <a class="subtitle is-6" href="/u/{{replique.creator.pageURL}}">
+                <span class="icon"><i class="fas fa-user"></i></span>
+                {{replique.creator.authorAlias}}
+              </a>
+            </div>
+            <div class="column is-one-fifths">
+              <span class="icon"><i class="fas fa-clock"></i></span>
+              {{# if replique.isPublished }}
+                <time unixstamp="{{ replique.publicationDateTimestamp }}"></time>
+              {{else}}
+                <time unixstamp="{{ replique.creationDateTimestamp }}"></time>
+              {{/if}}
+            </div>
+            <br>
+            {{#if replique.my }}
+
+              {{#if page.replique_edit }}
+                <div class="column">
+                  <a class="button is-warning is-small" href="/u/{{replique.creator.pageURL}}/{{ replique.id }}"
+                     style="width: -webkit-fill-available;">Назад</a>
+                </div>
+                <div class="column">
+                  <a class="button is-success is-small" id="replique-save" style="width: -webkit-fill-available;">Сохранить</a>
+                </div>
+              {{else}}
+                <div class="column">
+                  <a class="button is-primary is-small" href="/u/{{replique.creator.pageURL}}/{{ replique.id }}/edit"
+                     style="width: -webkit-fill-available;">Редактировать</a>
+                </div>
+                {{# if replique.isPublished }}
+                {{else}}
+                  <div class="column">
+                    <a class="button is-link is-small" id="replique-publish" rid="{{replique.id}}"
+                       style="width: -webkit-fill-available;">Опубликовать</a>
+                  </div>
+                {{/if}}
+
+              {{/if}}
+
+              <div class="column">
+                <a class="button is-danger is-small" id="replique-delete" rid="{{replique.id}}"
+                   style="width: -webkit-fill-available;">Удалить</a>
+              </div>
+
+            {{/if}}
+          </div>
+
+        </footer>
       </div>
 
-      <div class="content">
-        {{# if replique.abstractText }}
-          {{ replique.abstractText }}
-          <hr>
-        {{else}}
-        {{/if}}
-        <br/><br/>
+
+      <div class="notification is-danger is-hidden" id="updateErrorNotification">
+        <strong>Ошибка сохранения реплики</strong><br>
+        Убедитесь, что текст преамбулы не более 1000 символов. Иначе мы бессильны.
+      </div>
 
 
 
-        {{# if page.replique }}
+      {{#if page.replique_edit }}
+        <article class="panel is-link" style="margin-top: 8px;">
+          <p class="panel-heading" style="font-size:12pt;">Выбор публикаций, вдохновляющих эту реплику</p>
 
-          <div class="replique-content is-hidden" replique-id="{{ replique.id }}" style="border-width: 1px;">{{{replique.content}}}</div>
+          <div class="panel-block">
+            <p class="control has-icons-left">
+              <input id="origin-search" class="input is-primary" type="text" placeholder="Поиск реплик на Фонаре">
+              <span class="icon is-left"><i class="fas fa-search" aria-hidden="true"></i></span>
+            </p>
+          </div>
 
-        {{/if}}
+          <div id="origin-search-contents">
+          <!--            {{#each replique.discours as |origin|}}-->
+            <!--              {{#> childEntry}}-->
 
-        {{# if page.replique_edit }}
-          <div id="editorjs" replique-id="{{ replique.id }}" style="border-width: 1px;"></div>
+              <!--                <a class="panel-block origin-entry is-active" oid="{{ origin.id }}">-->
+              <!--                  <span class="panel-icon"><i class="fas fa-book" aria-hidden="true"></i></span>{{ origin.title }}  <strong><a-->
+              <!--                  href="/u/{{origin.creator.pageURL}}/{{ origin.id }}">ссылка</a></strong>  </a>-->
 
-          <div class="buttons">
-            <button class="button is-primary" id="replique-save">Сохранить реплику</button>
-          {{# if replique.isPublished }}
+              <!--              {{/childEntry}}-->
+            <!--            {{/each}}-->
+          </div>
 
-          {{else}}
-            <button class="button is-link" id="replique-publish">Опубликовать</button>
-          {{/if}}
-            <a class="button is-success" href="/u/{{replique.creator.pageURL}}/{{replique.id}}">Назад</a>
+
+        </article>
+
+      {{else}}
+
+        {{#if replique.discours.length}}
+
+          <div class="box">
+            <article class="media">
+              <div class="media-left">
+                      <span class="icon is-small">
+                           <i class="fas fa-reply" aria-hidden="true"></i>
+                      </span>
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  {{#each replique.discours as |origin|}}
+                    {{#> childEntry}}
+                      <p style="margin-bottom: 0px;" class="origin-entry" oid="{{ origin.id }}">
+                        <strong><a
+                          href="/u/{{origin.creator.pageURL}}/{{ origin.id }}">{{ origin.title }}</a></strong>
+                        <small><a
+                          href="/u/{{origin.creator.pageURL}}">{{ origin.creator.authorAlias }}</a></small>
+                        <!--                        <button class="button is-danger is-small" id="origin-delete" style="font-size: 9px;"-->
+                        <!--                                oid="{{ origin.id }}">Удалить-->
+                        <!--                        </button>-->
+                      </p>
+                    {{/childEntry}}
+                  {{/each}}
+                </div>
+              </div>
+            </article>
           </div>
 
         {{/if}}
 
+      {{/if}}
+
+      <div class="content" style="margin-top: 20px; margin-bottom: 20px;">
+
+        {{# if page.replique }}
+
+          {{# if replique.abstractText }}
+            <p>{{ replique.abstractText }}</p>
+            <hr>
+          {{else}}
+          {{/if}}
+
+          <div class="replique-content is-hidden" replique-id="{{ replique.id }}"
+               style="border-width: 1px;">{{{replique.content}}}</div>
+
+        {{/if}}
+
+        {{# if page.replique_edit }}
+
+          <p class="subtitle is-7">Преамбула реплики показывается в списках реплик и альманахах.</p>
+
+          <textarea id="abstractText" class="textarea" placeholder="Преамбула к реплике" rows="10"
+                    maxlength="1000">{{ replique.abstractText }}</textarea>
 
         <br>
-        <time datetime="2016-1-1" timestamp="{{ replique.publicationDate }}"></time>
+          <p class="subtitle is-7">Напишите текст реплики, который будет ясен и остроумен.</p>
+
+          <div class="box">
+            <div id="editorjs" replique-id="{{ replique.id }}" style="border-width: 1px;"></div>
+          </div>
+
+
+          <!--          <div class="buttons">-->
+          <!--            <button class="button is-primary" id="replique-save">Сохранить реплику</button>-->
+          <!--            {{# if replique.isPublished }}-->
+
+          <!--            {{else}}-->
+          <!--              <button class="button is-link" id="replique-publish">Опубликовать</button>-->
+          <!--            {{/if}}-->
+          <!--            <button class="button is-danger" id="replique-delete">Удалить</button>-->
+          <!--            <a class="button is-success" href="/u/{{replique.creator.pageURL}}/{{replique.id}}">Назад</a>-->
+          <!--          </div>-->
+
+
+        {{/if}}
+
 
       </div>
+
+
     </div>
+
   </div>
+
+  {{# if page.replique_edit }}
+  {{else}}
+
+    {{# if replique.isPublished }}
+
+      <div class="box" style="margin-top: 15px;">
+
+        <h4 class="title is-4" style="">Отклики</h4>
+
+        {{#if session.authorized }}
+
+          <article class="media">
+            <!--            <figure class="media-left">-->
+            <!--            </figure>-->
+            <div class="media-content">
+              <div class="field">
+                <p class="control">
+                    <textarea id="reponse-field" rid="{{ replique.id }}" class="textarea"
+                              placeholder="На Фонаре принято выражаться ясно и субъективно. Не допускайте безапелляционных заявлений и будьте добры к друг другу!"></textarea>
+                </p>
+              </div>
+              <nav class="level">
+                <div class="level-left">
+                  <div class="level-item">
+                    <a id="reponse-submit" class="button is-info">Оставить отклик</a>
+                  </div>
+                </div>
+                <div class="level-right">
+                  <div class="level-item">
+
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </article>
+
+        {{/if}}
+
+        <hr>
+
+        <div id="reponses">{{#each replique.reponses as |reponse|}}
+            {{#> childEntry}}
+
+              <article class="media">
+                <!--                <figure class="media-left">-->
+                <!--                </figure>-->
+                <div class="media-content">
+                  <div class="content">
+                    <p>
+                      <strong>{{ reponse.creator.authorAlias}}</strong> <a
+                      href="/u/{{ reponse.creator.pageURL }}"><small>{{ reponse.creator.pageURL }}</small></a> <small>
+
+                      {{# if reponse.isPublished }}
+                        <time unixstamp="{{ reponse.publicationDateTimestamp }}"></time>
+                      {{else}}
+                        <time unixstamp="{{ reponse.creationDateTimestamp }}"></time>
+                      {{/if}}
+
+                    </small>
+                      <br>
+                      {{ reponse.text }}
+                    </p>
+                  </div>
+
+                </div>
+                <div class="media-right">
+
+                </div>
+              </article>
+
+            {{/childEntry}}
+          {{/each}}</div>
+      </div>
+
+    {{/if}}
+
+  {{/if}}
 
 </div>
 

@@ -23,6 +23,7 @@ import {
 import { ReponseService } from './reponse.service';
 import { CreateReponseDto } from './dto/create.reponse.dto';
 import { AuthRequiredGuard } from '../auth/guards/auth.required.guard';
+import { RepliqueService } from "../replique/replique.service";
 
 @ApiCookieAuth()
 @ApiTags('reponse')
@@ -52,6 +53,29 @@ export class ReponseController {
       throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
   }
+
+  @ApiOperation({
+    summary: 'Get Reponses for Replique',
+  })
+  @ApiParam({ name: 'id', type: 'string' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Reponses have been successfully retrieved and presented within a response.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No Replique was found by the provided id.',
+  })
+  @Get('/replique/:id')
+  async getReponses(userId = 1, @Param('id') id) {
+    try {
+      return await this.reponseService.getReponses(userId, id);
+    } catch (e: any) {
+      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+    }
+  }
+
 
   @ApiOperation({
     summary: 'Create Reponse',
