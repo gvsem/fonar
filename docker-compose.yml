@@ -1,0 +1,93 @@
+version: "3.9"
+services:
+  fonar:
+    container_name: fonar
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      ApiDomain: "http://localhost:80"
+      AuthToken: ""
+      AuthURI: "http://supertokens:3567"
+      DATABASE_URL: "postgres://fonar:fonar@postgres:5432/fonar?sslmode=disable"
+      PORT: 3000
+    restart: unless-stopped
+    networks:
+      - app_network
+    ports:
+      - "80:3000"
+    depends_on:
+      - postgres
+      - supertokens
+
+  postgres:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_DB: fonar
+      POSTGRES_USER: fonar
+      POSTGRES_PASSWORD: fonar
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    networks:
+      - app_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -p 5432 -U fonar -d fonar" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    expose:
+      - 5432
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    volumes:
+      - ./deploy/postgres:/var/lib/postgresql/data
+      - ./docker/init_db.sql:/docker-entrypoint-initdb.d/init-database.sh
+
+  dbsupertokens:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_USER: supertokens
+      POSTGRES_PASSWORD: somePassword
+      POSTGRES_DB: supertokens
+      PGDATA: "/var/lib/postgresql/data_supertokens/pgdata"
+    expose:
+      - 5433
+    networks:
+      - app_network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -p 5433 -U supertokens -d supertokens" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    command: -p 5433
+    volumes:
+      - ./deploy/supertokens:/var/lib/postgresql/data_supertokens
+      - ./docker/init_supertokens.sql:/docker-entrypoint-initdb.d/init-database.sh
+
+  supertokens:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:4.4
+    depends_on:
+      dbsupertokens:
+        condition: service_healthy
+    environment:
+      POSTGRESQL_CONNECTION_URI: "postgresql://supertokens:somePassword@dbsupertokens:5433/supertokens"
+    networks:
+      - app_network
+    restart: unless-stopped
+    expose:
+      - 3567
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app_network:
+    driver: bridge

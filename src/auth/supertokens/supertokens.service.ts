@@ -12,7 +12,7 @@ export class SupertokensService {
       appInfo: config.appInfo,
       supertokens: {
         connectionURI: config.connectionURI,
-        apiKey: config.apiKey,
+        apiKey: config.apiKey
       },
       recipeList: [EmailPassword.init(), Session.init()],
     });

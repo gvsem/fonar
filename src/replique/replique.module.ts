@@ -15,7 +15,6 @@ import { AppModule } from "../app.module";
 @Module({
   imports: [
     forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User])),
-    forwardRef(() => TypeOrmModule.forFeature([Replique, Reponse, User], 'test')),
     forwardRef(() => ReponseModule),
     forwardRef(() => UserModule),
     forwardRef(() => SocialbusModule),

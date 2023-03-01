@@ -18,7 +18,6 @@ import { RepositoryProvider } from "../repository.provider";
 @Module({
   imports: [
     forwardRef(() => TypeOrmModule.forFeature([User])),
-    forwardRef(() => TypeOrmModule.forFeature([User], 'test')),
     forwardRef(() => ReponseModule),
     forwardRef(() => RepliqueModule),
   ],

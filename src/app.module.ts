@@ -26,17 +26,17 @@ import { RepositoryProvider } from "./repository.provider";
       synchronize: true,
       autoLoadEntities: true,
     }),
-    TypeOrmModule.forRoot({
-      name: 'test',
-      url: "postgres://nbqklrmvjeckyj:dc35b24785527868403cdc3dccd39552723c1f934e064ff8709982c7e0bb382b@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/dffeakuidgcepn\n",
-      type: 'postgres',
-      ssl: {
-        rejectUnauthorized: false,
-      },
-      entities: [join(__dirname, '**', 'entities', '*.entity.{ts,js}')],
-      synchronize: true,
-      autoLoadEntities: true,
-    }),
+    // TypeOrmModule.forRoot({
+    //   name: 'test',
+    //   url: "postgres://",
+    //   type: 'postgres',
+    //   ssl: {
+    //     rejectUnauthorized: false,
+    //   },
+    //   entities: [join(__dirname, '**', 'entities', '*.entity.{ts,js}')],
+    //   synchronize: true,
+    //   autoLoadEntities: true,
+    // }),
     AuthModule.forRoot({
       // These are the connection details of the app you created on supertokens.com
       connectionURI: process.env?.AuthURI,
